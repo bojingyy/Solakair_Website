@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Shield, ChevronRight } from "lucide-react";
+import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 import solakairLogo from "./solakair_logo.png";
 
 function DroneModel() {
@@ -138,11 +138,10 @@ export default function App() {
           <div className="flex items-center gap-3">
             <img src={solakairLogo} alt="Solakair logo" className="h-16 w-16 object-contain" />
             <div>
-              <p className="text-lg font-semibold tracking-[0.2em]">SOLAKAIR</p>
-              <p className="text-xs uppercase tracking-[0.3em] text-white/50">Advanced Aerial Systems</p>
+              <p className="text-4xl font-semibold tracking-[0.1em]">Solakair</p>
             </div>
           </div>
-          <nav className="hidden gap-8 text-sm text-white/75 md:flex">
+          <nav className="hidden gap-8 text-base text-white/75 md:flex">
             <a href="#product" className="transition hover:text-white">Product</a>
             <a href="#team" className="transition hover:text-white">Team</a>
             <a href="#contact" className="transition hover:text-white">Contact</a>
@@ -157,15 +156,11 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm text-white/75">
-              <Shield className="h-4 w-4" />
-              Built for controlled mission environments
-            </div>
-            <h1 className="mt-6 text-5xl font-semibold tracking-tight text-white md:text-6xl">
-              Secure aerial capability, presented with restraint.
+            <h1 className="text-5xl font-semibold tracking-tight text-white md:text-6xl">
+              Achieve Drone Air Superiority​, neutralize hostile drones and UAS
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-8 text-white/70">
-              Solakair develops next-generation drone platforms for specialized operations. This local demo site highlights the company, team, and contact details while intentionally limiting sensitive product information.
+              Solace - ASFD (Air Superiority Fighter Drone) 
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a

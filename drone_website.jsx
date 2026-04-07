@@ -5,6 +5,7 @@ import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 import solakairLogo from "./solakair_logo.png";
+import heroBackground from "./Gemini_Generated_Image_berw5oberw5oberw.png";
 
 function DroneModel() {
   return (
@@ -65,7 +66,7 @@ function DroneModel() {
 
 function ModelViewer() {
   return (
-    <div className="h-[420px] w-full overflow-hidden rounded-3xl border border-white/10 bg-black/30 shadow-2xl">
+    <div className="h-[420px] w-full overflow-hidden bg-[#050816]">
       <Canvas camera={{ position: [4.6, 2.4, 5.6], fov: 38 }} shadows>
         <Suspense fallback={null}>
           <color attach="background" args={["#050816"]} />
@@ -101,7 +102,7 @@ function SectionTitle({ eyebrow, title, text }) {
     <div className="max-w-2xl">
       <p className="mb-3 text-sm uppercase tracking-[0.25em] text-white/60">{eyebrow}</p>
       <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">{title}</h2>
-      <p className="mt-4 text-base leading-7 text-white/70">{text}</p>
+      {text ? <p className="mt-4 text-base leading-7 text-white/70">{text}</p> : null}
     </div>
   );
 }
@@ -150,68 +151,93 @@ export default function App() {
       </header>
 
       <main className="relative">
-        <section className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-28">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <h1 className="text-5xl font-semibold tracking-tight text-white md:text-6xl">
-              Achieve Drone Air Superiority​, neutralize hostile drones and UAS
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-8 text-white/70">
-              Solace - ASFD (Air Superiority Fighter Drone) 
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="#product"
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
-              >
-                View Product
-                <ChevronRight className="h-4 w-4" />
-              </a>
-              <a
-                href="#contact"
-                className="rounded-2xl border border-white/15 bg-white/5 px-5 py-3 font-medium text-white transition hover:bg-white/10"
-              >
-                Contact Team
-              </a>
-            </div>
-          </motion.div>
+        <section className="relative isolate overflow-hidden">
+          <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div
+              className="hero-sky absolute inset-0"
+              style={{ backgroundImage: `url(${heroBackground})` }}
+            />
+          </div>
+          <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-28">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="relative z-10"
+            >
+              <h1 className="text-5xl font-semibold tracking-tight text-white md:text-6xl">
+                Achieve Drone Air Superiority​
+              </h1>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-black/70">
+                Neutralize hostile drones and UAS
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="#product"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
+                >
+                  View Product
+                  <ChevronRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="#contact"
+                  className="rounded-2xl border border-white/15 bg-white/5 px-5 py-3 font-medium text-white transition hover:bg-white/10"
+                >
+                  Contact Team
+                </a>
+              </div>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="rounded-[2rem] border border-white/10 bg-white/5 p-4 shadow-2xl"
-          >
-            <ModelViewer />
-            <div className="mt-4 flex items-center justify-between rounded-2xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
-              <span>Interactive 3D drone model</span>
-              <span>Click + drag to rotate</span>
-            </div>
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.15 }}
+              className="relative z-10 overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl"
+            >
+              <ModelViewer />
+              <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
+                <span>Interactive 3D drone model</span>
+                <span>Click + drag to rotate</span>
+              </div>
+            </motion.div>
+          </div>
         </section>
 
         <section id="product" className="border-y border-white/10 bg-white/[0.03]">
           <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
             <SectionTitle
               eyebrow="Flagship Platform"
-              title="A mission-ready product page without exposing sensitive specifications."
-              text="This section is intentionally concise. It gives visitors a high-level understanding of the platform while avoiding detailed technical, performance, or operational disclosures."
+              title="Solace - ASD (Air Superiority Drone)"
+              text=""
             />
 
             <div className="grid gap-4">
               {[
-                "Modular airframe architecture",
-                "Operator-focused deployment workflow",
-                "Designed for reliability and maintainability",
-                "Secure integration path for authorized clients",
+                {
+                  title: "Detect",
+                  description:
+                    "Scan for objects.",
+                },
+                {
+                  title: "Identify",
+                  description:
+                    "Classify object (drone).",
+                },
+                {
+                  title: "Target",
+                  description:
+                    "Track object and select weapon.",
+                },
+                {
+                  title: "Engage",
+                  description:
+                    "Use interceptors on target.",
+                },
               ].map((item) => (
-                <div key={item} className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                  <p className="text-base font-medium text-white">{item}</p>
-                  <p className="mt-2 text-sm leading-6 text-white/60">
-                    High-level messaging only, suitable for public-facing viewing.
+                <div key={item.title} className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
+                  <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
+                  <p className="mt-2 text-base leading-7 text-white/60 md:text-lg">
+                    {item.description}
                   </p>
                 </div>
               ))}
@@ -255,14 +281,14 @@ export default function App() {
             <SectionTitle
               eyebrow="Contact"
               title="Connect with Solakair"
-              text="Use this section for general business inquiries, partnerships, and authorized product discussions. Replace the placeholder details with your real company information later."
+              text="Are you interested in our Counter Drone Solution? Or have questions?"
             />
 
             <div className="grid gap-4">
               {[
-                { icon: Mail, label: "Email", value: "contact@solakair.local" },
-                { icon: Phone, label: "Phone", value: "+1 (555) 010-2048" },
-                { icon: MapPin, label: "Location", value: "Sunnyvale, California" },
+                { icon: Mail, label: "Email", value: "alex@solakair.com" },
+                // { icon: Phone, label: "Phone", value: "+1 (555) 010-2048" },
+                { icon: MapPin, label: "Location", value: "Fremont, California" },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className="flex items-start gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-5">
                   <div className="rounded-2xl border border-white/10 bg-white/5 p-3">

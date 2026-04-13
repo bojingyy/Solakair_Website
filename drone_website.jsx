@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 import solakairLogo from "./solakair_logo.png";
 import heroBackground from "./Gemini_Generated_Image_berw5oberw5oberw.png";
+import teamBackground from "./team_background.png";
 
 function DroneModel() {
   return (
@@ -66,10 +67,9 @@ function DroneModel() {
 
 function ModelViewer() {
   return (
-    <div className="h-[420px] w-full overflow-hidden bg-[#050816]">
-      <Canvas camera={{ position: [4.6, 2.4, 5.6], fov: 38 }} shadows>
+    <div className="h-[420px] w-full overflow-hidden bg-transparent">
+      <Canvas camera={{ position: [4.6, 2.4, 5.6], fov: 38 }} shadows gl={{ alpha: true }} style={{ background: "transparent" }}>
         <Suspense fallback={null}>
-          <color attach="background" args={["#050816"]} />
           <fog attach="fog" args={["#050816", 6, 12]} />
           <ambientLight intensity={0.8} />
           <directionalLight
@@ -204,7 +204,7 @@ export default function App() {
         </section>
 
         <section id="product" className="border-y border-white/10 bg-white/[0.03]">
-          <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+          <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8">
             <SectionTitle
               eyebrow="Flagship Platform"
               title="Solace - ASD (Air Superiority Drone)"
@@ -245,34 +245,41 @@ export default function App() {
           </div>
         </section>
 
-        <section id="team" className="mx-auto max-w-7xl px-6 py-20 lg:px-8">
-          <SectionTitle
-            eyebrow="Leadership"
-            title="Meet the team"
-            text="A focused team page helps present credibility without oversharing internal program details."
-          />
+        <section
+          id="team"
+          className="relative isolate overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: `url(${teamBackground})` }}
+        >
+          <div className="absolute inset-0 bg-slate-950/70" />
+          <div className="relative z-10 mx-auto max-w-7xl px-6 py-20 lg:px-8">
+            <SectionTitle
+              eyebrow="Leadership"
+              title="Meet the team"
+              text="A focused team page helps present credibility without oversharing internal program details."
+            />
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {team.map((member, index) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-xl"
-              >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-lg font-semibold">
-                  {member.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </div>
-                <h3 className="text-xl font-semibold">{member.name}</h3>
-                <p className="mt-2 text-sm uppercase tracking-[0.18em] text-white/50">{member.role}</p>
-                <p className="mt-4 text-sm leading-7 text-white/70">{member.bio}</p>
-              </motion.div>
-            ))}
+            <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {team.map((member, index) => (
+                <motion.div
+                  key={member.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                  className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-xl"
+                >
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-lg font-semibold">
+                    {member.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </div>
+                  <h3 className="text-xl font-semibold text-white">{member.name}</h3>
+                  <p className="mt-2 text-sm uppercase tracking-[0.18em] text-white/50">{member.role}</p>
+                  <p className="mt-4 text-sm leading-7 text-white/70">{member.bio}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 

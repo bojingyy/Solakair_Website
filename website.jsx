@@ -5,8 +5,11 @@ import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ChevronRight } from "lucide-react";
 import solakairLogo from "./solakair_logo.png";
-import heroBackground from "./Gemini_Generated_Image_berw5oberw5oberw.png";
-import teamBackground from "./team_background.png";
+import heroBackground from "./solace_title_background.png";
+import controlImage from "./controll_image.png";
+import teamImageBojing from "./team_images/Bojing.jpg";
+import teamImageJoyce from "./team_images/Joyce.jpg";
+import teamImageVishesh from "./team_images/Vishesh.jpeg";
 
 function DroneModel() {
   return (
@@ -109,19 +112,22 @@ function SectionTitle({ eyebrow, title, text }) {
 
 const team = [
   {
-    name: "Ava Morgan",
-    role: "Chief Executive Officer",
+    name: "Bojing Yu",
+    role: "Software Engineer",
     bio: "Leads company strategy, partnerships, and mission delivery.",
+    image: teamImageBojing,
   },
   {
-    name: "Daniel Chen",
+    name: "Joyce Berdkand",
     role: "Head of Systems Engineering",
     bio: "Oversees airframe integration, testing, and platform reliability.",
+    image: teamImageJoyce,
   },
   {
-    name: "Maya Patel",
+    name: "Vishesh Brahmbhatt",
     role: "Director of Operations",
     bio: "Coordinates deployment readiness, client support, and execution.",
+    image: teamImageVishesh,
   },
 ];
 
@@ -151,14 +157,14 @@ export default function App() {
       </header>
 
       <main className="relative">
-        <section className="relative isolate overflow-hidden">
+        <section className="hero-section relative isolate overflow-hidden">
           <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
             <div
               className="hero-sky absolute inset-0"
               style={{ backgroundImage: `url(${heroBackground})` }}
             />
           </div>
-          <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 lg:grid-cols-2 lg:items-center lg:px-8 lg:py-28">
+          <div className="hero-content mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:h-full lg:grid-cols-2 lg:items-center lg:px-8 lg:py-12">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
@@ -168,7 +174,7 @@ export default function App() {
               <h1 className="text-5xl font-semibold tracking-tight text-white md:text-6xl">
                 Achieve Drone Air Superiority​
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-black/70">
+              <p className="mt-6 max-w-xl text-lg leading-8 text-white/70">
                 Neutralize hostile drones and UAS
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
@@ -181,7 +187,7 @@ export default function App() {
                 </a>
                 <a
                   href="#contact"
-                  className="rounded-2xl border border-white/15 bg-white/5 px-5 py-3 font-medium text-white transition hover:bg-white/10"
+                  className="rounded-2xl border border-white/15 bg-white/5 px-5 py-3 font-medium text-black transition hover:bg-white/10"
                 >
                   Contact Team
                 </a>
@@ -204,53 +210,61 @@ export default function App() {
         </section>
 
         <section id="product" className="border-y border-white/10 bg-white/[0.03]">
-          <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:px-8">
-            <SectionTitle
-              eyebrow="Flagship Platform"
-              title="Solace - ASD (Air Superiority Drone)"
-              text=""
-            />
+          <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 lg:px-8">
+            <div>
+              <SectionTitle
+                eyebrow="Flagship Platform"
+                title="Solace - ASD (Air Superiority Drone)"
+                text=""
+              />
 
-            <div className="grid gap-4">
-              {[
-                {
-                  title: "Detect",
-                  description:
-                    "Scan for objects.",
-                },
-                {
-                  title: "Identify",
-                  description:
-                    "Classify object (drone).",
-                },
-                {
-                  title: "Target",
-                  description:
-                    "Track object and select weapon.",
-                },
-                {
-                  title: "Engage",
-                  description:
-                    "Use interceptors on target.",
-                },
-              ].map((item) => (
-                <div key={item.title} className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                  <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
-                  <p className="mt-2 text-base leading-7 text-white/60 md:text-lg">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+              <div className="mt-8 grid gap-4">
+                {[
+                  {
+                    title: "Detect",
+                    description:
+                      "Scan the surrounding airspace to detect objects early and maintain situational awareness.",
+                  },
+                  {
+                    title: "Identify",
+                    description:
+                      "Classify the detected object and confirm whether it is a drone or other potential threat.",
+                  },
+                  {
+                    title: "Target",
+                    description:
+                      "Track the object in real time and select the most effective response option.",
+                  },
+                  {
+                    title: "Engage",
+                    description:
+                      "Deploy interceptors with precision to neutralize the target while minimizing collateral risk.",
+                  },
+                ].map((item) => (
+                  <div key={item.title} className="rounded-3xl border border-white/10 bg-slate-900/80 p-5">
+                    <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
+                    <p className="mt-2 text-base leading-7 text-white/60 md:text-lg">
+                      {item.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="overflow-hidden border border-white bg-slate-900/70 shadow-2xl">
+              <img
+                src={controlImage}
+                alt="Solace product control interface"
+                className="h-full min-h-[24rem] w-full object-cover"
+              />
             </div>
           </div>
         </section>
 
         <section
           id="team"
-          className="relative isolate overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: `url(${teamBackground})` }}
+          className="relative isolate overflow-hidden bg-white/[0.03]"
         >
-          <div className="absolute inset-0 bg-slate-950/70" />
           <div className="relative z-10 mx-auto max-w-7xl px-6 py-20 lg:px-8">
             <SectionTitle
               eyebrow="Leadership"
@@ -260,20 +274,28 @@ export default function App() {
 
             <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {team.map((member, index) => (
-                <motion.div
-                  key={member.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.08 }}
-                  className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 shadow-xl"
-                >
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-lg font-semibold">
-                    {member.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </div>
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+                className="rounded-[1.75rem] border border-white/10 bg-white/5 p-6 text-center shadow-xl"
+              >
+                  {member.image ? (
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="mx-auto mb-5 h-36 w-36 rounded-2xl border border-white/10 object-cover"
+                    />
+                  ) : (
+                    <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-lg font-semibold">
+                      {member.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </div>
+                  )}
                   <h3 className="text-xl font-semibold text-white">{member.name}</h3>
                   <p className="mt-2 text-sm uppercase tracking-[0.18em] text-white/50">{member.role}</p>
                   <p className="mt-4 text-sm leading-7 text-white/70">{member.bio}</p>

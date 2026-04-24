@@ -180,6 +180,7 @@ function HomePage() {
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
               >
                 Contact Team
+                <ChevronRight className="h-4 w-4" />
               </a>
             </div>
           </motion.div>
@@ -478,6 +479,9 @@ export default function App() {
   }
 
   const homeActive = route.page === "home";
+  const productActive = route.page === "home" && route.section === "product";
+  const teamActive = route.page === "home" && route.section === "team";
+  const contactActive = route.page === "home" && route.section === "contact";
   const navItemClass = "rounded-full px-4 py-2 transition";
   const activeNavItemClass = "bg-white text-slate-950";
   const inactiveNavItemClass = "text-white/75 hover:bg-white/10 hover:text-white";
@@ -500,12 +504,7 @@ export default function App() {
           </div>
 
           <nav className="flex items-center gap-2 text-sm md:gap-3 md:text-base">
-            <div
-              ref={homeMenuRef}
-              className="relative flex items-center rounded-full border border-white/10 bg-white/5"
-              onMouseEnter={openHomeMenu}
-              onMouseLeave={closeHomeMenu}
-            >
+            <div className="flex items-center rounded-full border border-white/10 bg-white/5">
               <button
                 type="button"
                 onClick={() => navigateToPage("home")}
@@ -513,39 +512,29 @@ export default function App() {
               >
                 Home
               </button>
-              <button
-                type="button"
-                onClick={() => setIsHomeMenuOpen((open) => !open)}
-                className={`rounded-full p-2 transition ${
-                  homeActive
-                    ? "text-white"
-                    : "text-white/90 hover:bg-white/10 hover:text-white"
-                }`}
-                aria-label="Open home navigation"
-                aria-expanded={isHomeMenuOpen}
-              >
-                <ChevronDown className={`h-4 w-4 transition ${isHomeMenuOpen ? "rotate-180" : ""}`} />
-              </button>
-
-              {isHomeMenuOpen ? (
-                <div className="absolute right-0 top-full mt-3 w-44 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 p-2 shadow-2xl backdrop-blur-xl">
-                  {[
-                    { label: "Product", section: "product" },
-                    { label: "Team", section: "team" },
-                    { label: "Contact", section: "contact" },
-                  ].map((item) => (
-                    <button
-                      key={item.section}
-                      type="button"
-                      onClick={() => navigateToSection(item.section)}
-                      className="flex w-full rounded-xl px-3 py-2 text-left text-white/80 transition hover:bg-white/10 hover:text-white"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
             </div>
+
+            <button
+              type="button"
+              onClick={() => navigateToSection("product")}
+              className={`${navItemClass} ${productActive ? activeNavItemClass : inactiveNavItemClass}`}
+            >
+              Product
+            </button>
+            <button
+              type="button"
+              onClick={() => navigateToSection("team")}
+              className={`${navItemClass} ${teamActive ? activeNavItemClass : inactiveNavItemClass}`}
+            >
+              Team
+            </button>
+            <button
+              type="button"
+              onClick={() => navigateToSection("contact")}
+              className={`${navItemClass} ${contactActive ? activeNavItemClass : inactiveNavItemClass}`}
+            >
+              Contact
+            </button>
 
             <button
               type="button"

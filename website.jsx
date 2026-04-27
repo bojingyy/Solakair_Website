@@ -368,6 +368,150 @@ function HomePage() {
   );
 }
 
+function InvestorsPage() {
+  return (
+    <main className="relative">
+      <section className="border-t border-white/10 bg-white/[0.03]">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:px-8">
+          <div>
+            <SectionTitle
+              eyebrow="Investors"
+              title="Invest in Solakair"
+              text="Get updates from Solakair. Add your email to the investor list."
+            />
+
+            <div className="mt-8">
+              <form className="flex flex-col items-start gap-3">
+                <label className="text-sm uppercase tracking-[0.12em] text-white/60">Add email to investor list</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="email"
+                    name="investorEmail"
+                    placeholder="you@example.com"
+                    className="min-w-[220px] rounded-lg bg-slate-800 border border-white/20 px-4 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Add Email</button>
+                </div>
+              </form>
+            </div>
+
+            <div className="mt-8 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+              <p className="mb-4 text-lg font-semibold">Send message to Solakair</p>
+              <div className="grid gap-3">
+                <div>
+                  <label className="block text-sm text-white/60">Sender Email</label>
+                  <input
+                    type="text"
+                    name="senderEmail"
+                    maxLength={40}
+                    placeholder="your@email.com"
+                    tabIndex={0}
+                    className="mt-2 w-full rounded-md bg-slate-800 border border-white/20 px-3 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-white/60">Send message to alex@solakair.com</label>
+                </div>
+
+                <div>
+                  <textarea
+                    name="message"
+                    maxLength={500}
+                    rows={6}
+                    placeholder="Your message..."
+                    className="mt-2 w-full rounded-md bg-slate-800 border border-white/20 px-3 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <div className="h-80 w-full rounded-2xl border border-white/10 bg-white/2" aria-hidden />
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function PartnersPage() {
+  return (
+    <main className="relative">
+      <section className="border-t border-white/10 bg-white/[0.03]">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:px-8">
+          <div>
+            <SectionTitle
+              eyebrow="Partners"
+              title="Partner with Solakair"
+              text="We seek partnerships with U.S. and allied defense companies."
+            />
+
+            <div className="mt-8">
+              <form className="flex flex-col items-start gap-3">
+                <label className="text-sm uppercase tracking-[0.12em] text-white/60">Add email to partner list</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="email"
+                    name="partnerEmail"
+                    placeholder="company-contact@example.com"
+                    className="min-w-[220px] rounded-lg bg-slate-800 border border-white/20 px-4 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Add Email</button>
+                </div>
+              </form>
+            </div>
+
+            <div className="mt-8 rounded-3xl border border-white/10 bg-slate-900/80 p-6">
+              <p className="mb-4 text-lg font-semibold">Send partnership inquiry</p>
+              <div className="grid gap-3">
+                <div>
+                  <label className="block text-sm text-white/60">Sender Email</label>
+                  <input
+                    type="text"
+                    name="senderEmail"
+                    maxLength={40}
+                    placeholder="your@company.com"
+                    tabIndex={0}
+                    className="mt-2 w-full rounded-md bg-slate-800 border border-white/20 px-3 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm text-white/60">Send message to partnerships@solakair.com</label>
+                </div>
+
+                <div>
+                  <textarea
+                    name="message"
+                    maxLength={500}
+                    rows={6}
+                    placeholder="Describe your capabilities and interest..."
+                    className="mt-2 w-full rounded-md bg-slate-800 border border-white/20 px-3 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                </div>
+
+                <div>
+                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Send</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <div className="h-80 w-full rounded-2xl border border-white/10 bg-white/2" aria-hidden />
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function BlankPage() {
   return <main className="relative min-h-[70vh]" />;
 }
@@ -554,7 +698,15 @@ export default function App() {
         </div>
       </header>
 
-      {route.page === "home" ? <HomePage /> : <BlankPage />}
+      {route.page === "home" ? (
+        <HomePage />
+      ) : route.page === "investors" ? (
+        <InvestorsPage />
+      ) : route.page === "partners" ? (
+        <PartnersPage />
+      ) : (
+        <BlankPage />
+      )}
     </div>
   );
 }

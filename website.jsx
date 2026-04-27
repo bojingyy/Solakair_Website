@@ -10,6 +10,8 @@ import controlImage from "./controll_image.png";
 import teamImageBojing from "./team_images/Bojing.jpg";
 import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
+import droneImage1 from "./drone_image_1.png";
+import droneImage2 from "./drone_image_2.png";
 
 function DroneModel() {
   return (
@@ -432,7 +434,12 @@ function InvestorsPage() {
           </div>
 
           <div className="flex items-center justify-center">
-            <div className="h-80 w-full rounded-2xl border border-white/10 bg-white/2" aria-hidden />
+            <img
+              src={droneImage1}
+              alt="Investor drone"
+              className="h-80 w-full rounded-2xl border border-white/10 object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
@@ -483,7 +490,7 @@ function PartnersPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white/60">Send message to partnerships@solakair.com</label>
+                  <label className="block text-sm text-white/60">Send message to alex@solakair.com</label>
                 </div>
 
                 <div>
@@ -504,7 +511,12 @@ function PartnersPage() {
           </div>
 
           <div className="flex items-center justify-center">
-            <div className="h-80 w-full rounded-2xl border border-white/10 bg-white/2" aria-hidden />
+            <img
+              src={droneImage2}
+              alt="Partner drone"
+              className="h-80 w-full rounded-2xl border border-white/10 object-cover"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>

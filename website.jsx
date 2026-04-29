@@ -4,15 +4,14 @@ import { Suspense, useEffect, useRef, useState } from "react";
 // import { Canvas } from "@react-three/fiber";
 // import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { Mail, MapPin, ChevronDown, ChevronRight } from "lucide-react";
+import { Crosshair, Mail, MapPin, Plane, Radar, Target } from "lucide-react";
 import solakairLogo from "./solakair_logo.png";
 import heroBackground from "./solace_title_background.png";
 import controlImage from "./controll_image.png";
 import teamImageBojing from "./team_images/Bojing.jpg";
 import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
-import droneImage1 from "./drone_image_1.png";
-import droneImage2 from "./drone_image_2.png";
+import homepageDroneImage from "./homepage_drone_image.png";
 
 /* Interactive 3D model temporarily commented out.
    Keep the code below for future re-enable.
@@ -181,14 +180,12 @@ function HomePage() {
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
               >
                 View Product
-                <ChevronRight className="h-4 w-4" />
               </a>
               <a
                 href="#contact"
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
               >
                 Contact Team
-                <ChevronRight className="h-4 w-4" />
               </a>
             </div>
           </motion.div>
@@ -214,30 +211,35 @@ function HomePage() {
               {[
                 {
                   title: "Detect",
+                  icon: Radar,
                   description:
                     "Scan the surrounding airspace to detect objects early and maintain situational awareness.",
                 },
                 {
                   title: "Identify",
+                  icon: Plane,
                   description:
                     "Classify the detected object and confirm whether it is a drone or other potential threat.",
                 },
                 {
                   title: "Target",
+                  icon: Target,
                   description:
                     "Track the object in real time and select the most effective response option.",
                 },
                 {
                   title: "Engage",
+                  icon: Crosshair,
                   description:
                     "Deploy interceptors with precision to neutralize the target while minimizing collateral risk.",
                 },
               ].map((item) => (
                 <div key={item.title} className="product-step-card rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                  <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
-                  <p className="mt-2 text-base leading-7 text-white/60 md:text-lg">
-                    {item.description}
-                  </p>
+                  <div className="flex items-center gap-2.5">
+                    <item.icon className="h-6 w-6 shrink-0 text-cyan-300" aria-hidden="true" />
+                    <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
+                  </div>
+                  <p className="mt-2 text-base leading-7 text-white/60 md:text-lg">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -284,7 +286,7 @@ function HomePage() {
               {productView === "model" ? (
                 <div className="flex h-[420px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
-                    src={droneImage1}
+                    src={homepageDroneImage}
                     alt="Drone static preview"
                     className="h-full w-full scale-[1.03] object-contain"
                     loading="lazy"
@@ -363,12 +365,12 @@ function HomePage() {
 
           <div className="grid gap-4">
             {[
-              { icon: Mail, label: "Email", value: "alex@solakair.com" },
-              { icon: MapPin, label: "Location", value: "Fremont, California, USA" },
-            ].map(({ icon: Icon, label, value }) => (
+              { label: "Email", value: "alex@solakair.com", icon: Mail },
+              { label: "Location", value: "Fremont, California, USA", icon: MapPin },
+            ].map(({ label, value, icon: Icon }) => (
               <div key={label} className="flex items-start gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
-                  <Icon className="h-5 w-5" />
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-cyan-300">
+                  <Icon className="h-5 w-5" aria-hidden="true" />
                 </div>
                 <div>
                   <p className="text-sm uppercase tracking-[0.18em] text-white/45">{label}</p>
@@ -448,7 +450,7 @@ function InvestorsPage() {
 
           <div className="flex items-center justify-center">
             <img
-              src={droneImage1}
+              src={homepageDroneImage}
               alt="Investor drone"
               className="h-80 w-full rounded-2xl border border-white/10 object-cover"
               loading="lazy"
@@ -525,7 +527,7 @@ function PartnersPage() {
 
           <div className="flex items-center justify-center">
             <img
-              src={droneImage2}
+              src={homepageDroneImage}
               alt="Partner drone"
               className="h-80 w-full rounded-2xl border border-white/10 object-cover"
               loading="lazy"
@@ -647,7 +649,7 @@ export default function App() {
     }, 180);
   }
 
-  const homeActive = route.page === "home";
+  const homeActive = route.page === "home" && (!route.section || route.section === "");
   const productActive = route.page === "home" && route.section === "product";
   const teamActive = route.page === "home" && route.section === "team";
   const contactActive = route.page === "home" && route.section === "contact";

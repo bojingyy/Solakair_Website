@@ -1,7 +1,8 @@
 // http://localhost:5173/
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Float, Environment } from "@react-three/drei";
+// 3D viewer temporarily disabled — keep imports commented for future re-enable
+// import { Canvas } from "@react-three/fiber";
+// import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
 import { Mail, MapPin, ChevronDown, ChevronRight } from "lucide-react";
 import solakairLogo from "./solakair_logo.png";
@@ -12,6 +13,9 @@ import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
 import droneImage1 from "./drone_image_1.png";
 import droneImage2 from "./drone_image_2.png";
+
+/* Interactive 3D model temporarily commented out.
+   Keep the code below for future re-enable.
 
 function DroneModel() {
   return (
@@ -101,6 +105,8 @@ function ModelViewer() {
     </div>
   );
 }
+
+*/
 
 function SectionTitle({ eyebrow, title, text, titleClassName = "" }) {
   return (
@@ -258,7 +264,7 @@ function HomePage() {
                     }`}
                     aria-pressed={productView === "model"}
                   >
-                    Drone 3D Model
+                    Fixed-Wing Model
                   </button>
                   <button
                     type="button"
@@ -270,13 +276,20 @@ function HomePage() {
                     }`}
                     aria-pressed={productView === "terminal"}
                   >
-                    Terminal Window
+                    Ground Picture
                   </button>
                 </div>
               </div>
 
               {productView === "model" ? (
-                <ModelViewer />
+                <div className="flex h-[420px] w-full items-center justify-center bg-slate-950/80 p-2">
+                  <img
+                    src={droneImage1}
+                    alt="Drone static preview"
+                    className="h-full w-full scale-[1.03] object-contain"
+                    loading="lazy"
+                  />
+                </div>
               ) : (
                 <div className="flex h-[420px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
@@ -288,8 +301,8 @@ function HomePage() {
                 </div>
               )}
               <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
-                <span>{productView === "model" ? "Interactive 3D drone model" : "Product terminal window"}</span>
-                <span>{productView === "model" ? "Click + drag to rotate" : "Control panel preview"}</span>
+                <span>{productView === "model" ? "Drone image (static preview)" : "Product terminal window"}</span>
+                <span>{productView === "model" ? "Static preview" : "Control panel preview"}</span>
               </div>
             </div>
           </motion.div>
@@ -351,7 +364,7 @@ function HomePage() {
           <div className="grid gap-4">
             {[
               { icon: Mail, label: "Email", value: "alex@solakair.com" },
-              { icon: MapPin, label: "Location", value: "Fremont, California" },
+              { icon: MapPin, label: "Location", value: "Fremont, California, USA" },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex items-start gap-4 rounded-3xl border border-white/10 bg-slate-900/80 p-5">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-3">
@@ -379,7 +392,7 @@ function InvestorsPage() {
             <SectionTitle
               eyebrow="Investors"
               title="Invest in Solakair"
-              text="Get updates from Solakair. Add your email to the investor list."
+              text="Get investor updates from Solakair. Add your email to the investor list."
             />
 
             <div className="mt-8">

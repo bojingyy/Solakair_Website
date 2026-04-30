@@ -1,17 +1,31 @@
-// http://localhost:5173/
 import { Suspense, useEffect, useRef, useState } from "react";
 // 3D viewer temporarily disabled — keep imports commented for future re-enable
 // import { Canvas } from "@react-three/fiber";
 // import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { Crosshair, Mail, MapPin, Plane, Radar, Target } from "lucide-react";
+//icons
+import { Mail, MapPin, Radar, Target } from "lucide-react";
+//crosshair icon for product description card (Engage)
+import { PiCrosshairBold } from "react-icons/pi";
+//airplane icon for product description card (Identify)
+import { BsAirplaneEngines } from "react-icons/bs";
 import solakairLogo from "./solakair_logo.png";
+
+//homepage title background image
 import heroBackground from "./solace_title_background.png";
-import controlImage from "./controll_image.png";
+
+//team member images
 import teamImageBojing from "./team_images/Bojing.jpg";
 import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
+
+//homepage drone image (will be replaced by interactive 3D model in the future))
 import homepageDroneImage from "./homepage_drone_image.png";
+//homepage product ground control image
+import controlImage from "./controll_image.png";
+
+//investor page drone image (top-view)
+import topviewDroneImage from "./top_view_transparent.png";
 
 /* Interactive 3D model temporarily commented out.
    Keep the code below for future re-enable.
@@ -217,7 +231,7 @@ function HomePage() {
                 },
                 {
                   title: "Identify",
-                  icon: Plane,
+                  icon: BsAirplaneEngines,
                   description:
                     "Classify the detected object and confirm whether it is a drone or other potential threat.",
                 },
@@ -229,7 +243,7 @@ function HomePage() {
                 },
                 {
                   title: "Engage",
-                  icon: Crosshair,
+                  icon: PiCrosshairBold,
                   description:
                     "Deploy interceptors with precision to neutralize the target while minimizing collateral risk.",
                 },
@@ -284,7 +298,7 @@ function HomePage() {
               </div>
 
               {productView === "model" ? (
-                <div className="flex h-[420px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="flex h-[360px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={homepageDroneImage}
                     alt="Drone static preview"
@@ -293,7 +307,7 @@ function HomePage() {
                   />
                 </div>
               ) : (
-                <div className="flex h-[420px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="flex h-[360px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={controlImage}
                     alt="Product terminal window"
@@ -303,7 +317,7 @@ function HomePage() {
                 </div>
               )}
               <div className="flex items-center justify-between border-t border-white/10 bg-black/20 px-4 py-3 text-sm text-white/65">
-                <span>{productView === "model" ? "Drone image (static preview)" : "Product terminal window"}</span>
+                <span>{productView === "model" ? "Drone Model" : "Product In Use"}</span>
                 <span>{productView === "model" ? "Static preview" : "Control panel preview"}</span>
               </div>
             </div>
@@ -449,12 +463,14 @@ function InvestorsPage() {
           </div>
 
           <div className="flex items-center justify-center">
-            <img
-              src={homepageDroneImage}
-              alt="Investor drone"
-              className="h-80 w-full rounded-2xl border border-white/10 object-cover"
-              loading="lazy"
-            />
+            <div className="w-full rounded-[1.1rem] border border-white/70 p-[1.5px]">
+              <img
+                src={topviewDroneImage}
+                alt="Investor drone"
+                className="h-[460px] w-full rounded-[1rem] border border-white/10 bg-slate-950/80 object-contain"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -526,12 +542,14 @@ function PartnersPage() {
           </div>
 
           <div className="flex items-center justify-center">
-            <img
-              src={homepageDroneImage}
-              alt="Partner drone"
-              className="h-80 w-full rounded-2xl border border-white/10 object-cover"
-              loading="lazy"
-            />
+            <div className="w-full rounded-[1.1rem] border border-white/70 p-[1.5px]">
+              <img
+                src={homepageDroneImage}
+                alt="Partner drone"
+                className="h-[460px] w-full rounded-[1rem] border border-white/10 bg-slate-950/80 object-contain"
+                loading="lazy"
+              />
+            </div>
           </div>
         </div>
       </section>

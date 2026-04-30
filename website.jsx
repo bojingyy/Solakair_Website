@@ -29,6 +29,35 @@ import partnerImage from "./images/partner_image_v1.png";
 //homepage product ground control image
 import controlImage from "./images/controll_image.png";
 
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxjb5P-ZJ-dt8f9pNTUsydP3cVeVhNJ_I7q2SvXqOgzF0-wo1yYQWtwwyFepN-54Ldg/exec";
+const API_SECRET = "200205241582";
+
+async function postToAppsScript(payload) {
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, secret: API_SECRET }),
+    });
+
+    const text = await res.text();
+    let body;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      return { error: "invalid_response", detail: text.slice(0, 240) };
+    }
+
+    if (!res.ok) {
+      return { error: "http_error", status: res.status, body };
+    }
+
+    return body;
+  } catch (err) {
+    return { error: "network_error", detail: String(err) };
+  }
+}
+
 /* Interactive 3D model temporarily commented out.
    Keep the code below for future re-enable.
 
@@ -402,6 +431,49 @@ function HomePage() {
 }
 
 function InvestorsPage() {
+  const [investorEmail, setInvestorEmail] = useState("");
+  const [invLoading, setInvLoading] = useState(false);
+  const [senderEmail, setSenderEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [msgLoading, setMsgLoading] = useState(false);
+
+  async function handleAddInvestor() {
+    if (!investorEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(investorEmail)) {
+      alert("Please enter a valid email.");
+      return;
+    }
+    setInvLoading(true);
+    const res = await postToAppsScript({ action: "investor", email: investorEmail });
+    setInvLoading(false);
+    if (res && res.ok) {
+      setInvestorEmail("");
+      alert("Added to investor list.");
+    } else {
+      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+    }
+  }
+
+  async function handleSendMessage() {
+    if (!senderEmail || !message) {
+      alert("Please provide sender email and message.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(senderEmail)) {
+      alert("Please enter a valid sender email.");
+      return;
+    }
+    setMsgLoading(true);
+    const res = await postToAppsScript({ action: "contact", senderEmail, message });
+    setMsgLoading(false);
+    if (res && res.ok) {
+      setSenderEmail("");
+      setMessage("");
+      alert("Message sent.");
+    } else {
+      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+    }
+  }
+
   return (
     <main className="relative">
       <section className="border-t border-white/10 bg-white/[0.03]">
@@ -420,10 +492,19 @@ function InvestorsPage() {
                   <input
                     type="email"
                     name="investorEmail"
+                    value={investorEmail}
+                    onChange={(e) => setInvestorEmail(e.target.value)}
                     placeholder="you@example.com"
                     className="min-w-[220px] rounded-lg bg-slate-800 border border-white/20 px-4 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
-                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Add Email</button>
+                  <button
+                    type="button"
+                    onClick={handleAddInvestor}
+                    disabled={invLoading}
+                    className="rounded-lg bg-white px-4 py-2 text-slate-900 disabled:opacity-60"
+                  >
+                    {invLoading ? "Adding..." : "Add Email"}
+                  </button>
                 </div>
               </form>
             </div>
@@ -436,6 +517,8 @@ function InvestorsPage() {
                   <input
                     type="text"
                     name="senderEmail"
+                    value={senderEmail}
+                    onChange={(e) => setSenderEmail(e.target.value)}
                     maxLength={40}
                     placeholder="your@email.com"
                     tabIndex={0}
@@ -450,6 +533,8 @@ function InvestorsPage() {
                 <div>
                   <textarea
                     name="message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
                     maxLength={500}
                     rows={6}
                     placeholder="Your message..."
@@ -458,7 +543,14 @@ function InvestorsPage() {
                 </div>
 
                 <div>
-                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Send</button>
+                  <button
+                    type="button"
+                    onClick={handleSendMessage}
+                    disabled={msgLoading}
+                    className="rounded-lg bg-white px-4 py-2 text-slate-900 disabled:opacity-60"
+                  >
+                    {msgLoading ? "Sending..." : "Send"}
+                  </button>
                 </div>
               </div>
             </div>
@@ -481,6 +573,49 @@ function InvestorsPage() {
 }
 
 function PartnersPage() {
+  const [partnerEmail, setPartnerEmail] = useState("");
+  const [pInvLoading, setPInvLoading] = useState(false);
+  const [pSenderEmail, setPSenderEmail] = useState("");
+  const [pMessage, setPMessage] = useState("");
+  const [pMsgLoading, setPMsgLoading] = useState(false);
+
+  async function handleAddPartner() {
+    if (!partnerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(partnerEmail)) {
+      alert("Please enter a valid email.");
+      return;
+    }
+    setPInvLoading(true);
+    const res = await postToAppsScript({ action: "partner", email: partnerEmail });
+    setPInvLoading(false);
+    if (res && res.ok) {
+      setPartnerEmail("");
+      alert("Added to partner list.");
+    } else {
+      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+    }
+  }
+
+  async function handleSendPartnership() {
+    if (!pSenderEmail || !pMessage) {
+      alert("Please provide sender email and message.");
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pSenderEmail)) {
+      alert("Please enter a valid sender email.");
+      return;
+    }
+    setPMsgLoading(true);
+    const res = await postToAppsScript({ action: "contact", senderEmail: pSenderEmail, message: pMessage });
+    setPMsgLoading(false);
+    if (res && res.ok) {
+      setPSenderEmail("");
+      setPMessage("");
+      alert("Partnership message sent.");
+    } else {
+      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+    }
+  }
+
   return (
     <main className="relative">
       <section className="border-t border-white/10 bg-white/[0.03]">
@@ -499,10 +634,19 @@ function PartnersPage() {
                   <input
                     type="email"
                     name="partnerEmail"
+                    value={partnerEmail}
+                    onChange={(e) => setPartnerEmail(e.target.value)}
                     placeholder="company-contact@example.com"
                     className="min-w-[220px] rounded-lg bg-slate-800 border border-white/20 px-4 py-2 text-white placeholder-white/50 shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   />
-                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Add Email</button>
+                  <button
+                    type="button"
+                    onClick={handleAddPartner}
+                    disabled={pInvLoading}
+                    className="rounded-lg bg-white px-4 py-2 text-slate-900 disabled:opacity-60"
+                  >
+                    {pInvLoading ? "Adding..." : "Add Email"}
+                  </button>
                 </div>
               </form>
             </div>
@@ -515,6 +659,8 @@ function PartnersPage() {
                   <input
                     type="text"
                     name="senderEmail"
+                    value={pSenderEmail}
+                    onChange={(e) => setPSenderEmail(e.target.value)}
                     maxLength={40}
                     placeholder="your@company.com"
                     tabIndex={0}
@@ -529,6 +675,8 @@ function PartnersPage() {
                 <div>
                   <textarea
                     name="message"
+                    value={pMessage}
+                    onChange={(e) => setPMessage(e.target.value)}
                     maxLength={500}
                     rows={6}
                     placeholder="Describe your capabilities and interest..."
@@ -537,7 +685,14 @@ function PartnersPage() {
                 </div>
 
                 <div>
-                  <button type="button" className="rounded-lg bg-white px-4 py-2 text-slate-900">Send</button>
+                  <button
+                    type="button"
+                    onClick={handleSendPartnership}
+                    disabled={pMsgLoading}
+                    className="rounded-lg bg-white px-4 py-2 text-slate-900 disabled:opacity-60"
+                  >
+                    {pMsgLoading ? "Sending..." : "Send"}
+                  </button>
                 </div>
               </div>
             </div>

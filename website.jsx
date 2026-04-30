@@ -9,10 +9,10 @@ import { Mail, MapPin, Radar, Target } from "lucide-react";
 import { PiCrosshairBold } from "react-icons/pi";
 //airplane icon for product description card (Identify)
 import { BsAirplaneEngines } from "react-icons/bs";
-import solakairLogo from "./solakair_logo.png";
+import solakairLogo from "./images/solakair_logo.png";
 
 //homepage title background image
-import heroBackground from "./solace_title_background.png";
+import heroBackground from "./images/solace_title_background.png";
 
 //team member images
 import teamImageBojing from "./team_images/Bojing.jpg";
@@ -20,12 +20,12 @@ import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
 
 //homepage drone image (will be replaced by interactive 3D model in the future))
-import homepageDroneImage from "./homepage_drone_image.png";
+import homepageDroneImage from "./images/homepage_drone_image.png";
 //homepage product ground control image
-import controlImage from "./controll_image.png";
+import controlImage from "./images/controll_image.png";
 
 //investor page drone image (top-view)
-import topviewDroneImage from "./top_view_transparent.png";
+import topviewDroneImage from "./images/top_view_transparent.png";
 
 /* Interactive 3D model temporarily commented out.
    Keep the code below for future re-enable.

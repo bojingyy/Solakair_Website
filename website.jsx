@@ -21,11 +21,13 @@ import teamImageVishesh from "./team_images/Vishesh.jpeg";
 
 //homepage drone image (will be replaced by interactive 3D model in the future))
 import homepageDroneImage from "./images/homepage_drone_image.png";
-//homepage product ground control image
-import controlImage from "./images/controll_image.png";
 
 //investor page drone image (top-view)
-import topviewDroneImage from "./images/top_view_transparent.png";
+import topviewDroneImage from "./images/top_view_v4.png";
+//partners page image
+import partnerImage from "./images/partner_image_v1.png";
+//homepage product ground control image
+import controlImage from "./images/controll_image.png";
 
 /* Interactive 3D model temporarily commented out.
    Keep the code below for future re-enable.
@@ -135,19 +137,19 @@ const team = [
   {
     name: "Bojing Yu",
     role: "Software Engineer",
-    bio: "Leads company strategy, partnerships, and mission delivery.",
+    bio: "Builds scalable full-stack platforms and APIs for data-driven applications.",
     image: teamImageBojing,
   },
   {
     name: "Joyce Berdkand",
-    role: "Head of Systems Engineering",
-    bio: "Oversees airframe integration, testing, and platform reliability.",
+    role: "SYSTEMS ENGINEER",
+    bio: "Develops reliable embedded and control systems for real-time UAV performance.",
     image: teamImageJoyce,
   },
   {
     name: "Vishesh Brahmbhatt",
-    role: "Director of Operations",
-    bio: "Coordinates deployment readiness, client support, and execution.",
+    role: "AUTONOMOUS SYSTEMS ENGINEER",
+    bio: "Builds high-precision autonomous UAV systems using real-time vision and sensor fusion.",
     image: teamImageVishesh,
   },
 ];
@@ -463,11 +465,11 @@ function InvestorsPage() {
           </div>
 
           <div className="flex items-center justify-center">
-            <div className="w-full rounded-[1.1rem] border border-white/70 p-[1.5px]">
+            <div className="inline-block rounded-[1.1rem] border border-white/70 p-[1.5px]">
               <img
                 src={topviewDroneImage}
                 alt="Investor drone"
-                className="h-[460px] w-full rounded-[1rem] border border-white/10 bg-slate-950/80 object-contain"
+                className="block h-auto max-h-[460px] w-auto max-w-full rounded-[1rem] border border-white/10 bg-slate-950/80 object-contain"
                 loading="lazy"
               />
             </div>
@@ -542,11 +544,11 @@ function PartnersPage() {
           </div>
 
           <div className="flex items-center justify-center">
-            <div className="w-full rounded-[1.1rem] border border-white/70 p-[1.5px]">
+            <div className="inline-block rounded-[1.1rem] border border-white/70 p-[1.5px]">
               <img
-                src={homepageDroneImage}
+                src={partnerImage}
                 alt="Partner drone"
-                className="h-[460px] w-full rounded-[1rem] border border-white/10 bg-slate-950/80 object-contain"
+                className="block h-auto max-h-[460px] w-auto max-w-full rounded-[1rem] border border-white/10 bg-slate-950/80 object-contain"
                 loading="lazy"
               />
             </div>

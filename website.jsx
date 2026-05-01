@@ -42,7 +42,7 @@ async function postToAppsScript(payload) {
       body: formData.toString(),
     });
     // no-cors responses are opaque; treat completion as success
-    return { success: true };
+    return { ok: true };
   } catch (err) {
     return { error: "network_error", detail: String(err) };
   }
@@ -435,11 +435,11 @@ function InvestorsPage() {
     setInvLoading(true);
     const res = await postToAppsScript({ action: "investor", email: investorEmail });
     setInvLoading(false);
-    if (res && res.ok) {
-      setInvestorEmail("");
-      alert("Added to investor list.");
+    if (res && res.error) {
+      alert("Something went wrong. Please try again.");
     } else {
-      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+      setInvestorEmail("");
+      alert("You've been added to the investor list!");
     }
   }
 
@@ -455,12 +455,12 @@ function InvestorsPage() {
     setMsgLoading(true);
     const res = await postToAppsScript({ action: "contact", senderEmail, message });
     setMsgLoading(false);
-    if (res && res.ok) {
+    if (res && res.error) {
+      alert("Something went wrong. Please try again.");
+    } else {
       setSenderEmail("");
       setMessage("");
-      alert("Message sent.");
-    } else {
-      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+      alert("Your message has been sent!");
     }
   }
 
@@ -577,11 +577,11 @@ function PartnersPage() {
     setPInvLoading(true);
     const res = await postToAppsScript({ action: "partner", email: partnerEmail });
     setPInvLoading(false);
-    if (res && res.ok) {
-      setPartnerEmail("");
-      alert("Added to partner list.");
+    if (res && res.error) {
+      alert("Something went wrong. Please try again.");
     } else {
-      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+      setPartnerEmail("");
+      alert("You've been added to the partner list!");
     }
   }
 
@@ -597,12 +597,12 @@ function PartnersPage() {
     setPMsgLoading(true);
     const res = await postToAppsScript({ action: "contact", senderEmail: pSenderEmail, message: pMessage });
     setPMsgLoading(false);
-    if (res && res.ok) {
+    if (res && res.error) {
+      alert("Something went wrong. Please try again.");
+    } else {
       setPSenderEmail("");
       setPMessage("");
-      alert("Partnership message sent.");
-    } else {
-      alert("Error: " + (res && (res.error || res.detail) ? (res.error || res.detail) : "Unknown"));
+      alert("Your message has been sent!");
     }
   }
 

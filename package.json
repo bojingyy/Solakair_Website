@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "postbuild": "copy /Y client\\client-package.json dist\\client-package.json >NUL",
     "preview": "vite preview"
   },
   "dependencies": {

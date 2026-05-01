@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "48354000000013090",
+      "name": "SolakairWebsite",
+      "domain": {
+        "id": "10125005941",
+        "name": "solakairwebsite-922706863.development"
+      },
+      "timezone": "America/Los_Angeles",
+      "env": [
+        {
+          "idx": 1,
+          "id": "922706863",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}

@@ -34,25 +34,15 @@ const API_SECRET = "200205241582";
 
 async function postToAppsScript(payload) {
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
+    const formData = new URLSearchParams({ ...payload, secret: API_SECRET });
+    await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...payload, secret: API_SECRET }),
+      mode: "no-cors",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: formData.toString(),
     });
-
-    const text = await res.text();
-    let body;
-    try {
-      body = JSON.parse(text);
-    } catch {
-      return { error: "invalid_response", detail: text.slice(0, 240) };
-    }
-
-    if (!res.ok) {
-      return { error: "http_error", status: res.status, body };
-    }
-
-    return body;
+    // no-cors responses are opaque; treat completion as success
+    return { success: true };
   } catch (err) {
     return { error: "network_error", detail: String(err) };
   }

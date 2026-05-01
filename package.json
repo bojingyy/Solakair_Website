@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "postbuild": "copy /Y client\\client-package.json dist\\client-package.json >NUL",
+    "postbuild": "node -e \"require('fs').copyFileSync('client/client-package.json','dist/client-package.json')\"",
     "preview": "vite preview"
   },
   "dependencies": {

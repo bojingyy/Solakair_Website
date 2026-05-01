@@ -433,14 +433,10 @@ function InvestorsPage() {
       return;
     }
     setInvLoading(true);
-    const res = await postToAppsScript({ action: "investor", email: investorEmail });
+    await postToAppsScript({ action: "investor", email: investorEmail });
     setInvLoading(false);
-    if (res && res.error) {
-      alert("Something went wrong. Please try again.");
-    } else {
-      setInvestorEmail("");
-      alert("You've been added to the investor list!");
-    }
+    setInvestorEmail("");
+    alert("You've been added to the investor list!");
   }
 
   async function handleSendMessage() {
@@ -453,15 +449,11 @@ function InvestorsPage() {
       return;
     }
     setMsgLoading(true);
-    const res = await postToAppsScript({ action: "contact", senderEmail, message });
+    await postToAppsScript({ action: "contact", senderEmail, message });
     setMsgLoading(false);
-    if (res && res.error) {
-      alert("Something went wrong. Please try again.");
-    } else {
-      setSenderEmail("");
-      setMessage("");
-      alert("Your message has been sent!");
-    }
+    setSenderEmail("");
+    setMessage("");
+    alert("Your message has been sent!");
   }
 
   return (
@@ -575,14 +567,10 @@ function PartnersPage() {
       return;
     }
     setPInvLoading(true);
-    const res = await postToAppsScript({ action: "partner", email: partnerEmail });
+    await postToAppsScript({ action: "partner", email: partnerEmail });
     setPInvLoading(false);
-    if (res && res.error) {
-      alert("Something went wrong. Please try again.");
-    } else {
-      setPartnerEmail("");
-      alert("You've been added to the partner list!");
-    }
+    setPartnerEmail("");
+    alert("You've been added to the partner list!");
   }
 
   async function handleSendPartnership() {
@@ -595,15 +583,11 @@ function PartnersPage() {
       return;
     }
     setPMsgLoading(true);
-    const res = await postToAppsScript({ action: "contact", senderEmail: pSenderEmail, message: pMessage });
+    await postToAppsScript({ action: "contact", senderEmail: pSenderEmail, message: pMessage });
     setPMsgLoading(false);
-    if (res && res.error) {
-      alert("Something went wrong. Please try again.");
-    } else {
-      setPSenderEmail("");
-      setPMessage("");
-      alert("Your message has been sent!");
-    }
+    setPSenderEmail("");
+    setPMessage("");
+    alert("Your message has been sent!");
   }
 
   return (

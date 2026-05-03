@@ -204,7 +204,9 @@ function HomePage() {
             className="relative z-10"
           >
             <h1 className="hero-title text-5xl font-semibold tracking-tight text-white md:text-6xl">
-              Achieve Drone Air Superiority​
+              Achieve 
+              <br />
+              Drone Air Superiority​
             </h1>
             <p className="hero-subtitle mt-6 max-w-xl text-xl font-semibold leading-8 text-white md:text-2xl">
               Neutralize hostile drones and UAS
@@ -234,7 +236,7 @@ function HomePage() {
               eyebrow="Flagship Platform"
               title={
                 <>
-                  Solace - 
+                  SO-14 Solace 
                   <br />
                   <span className="whitespace-nowrap">Air Superiority Drone (ASD)</span>
                 </>
@@ -313,7 +315,7 @@ function HomePage() {
                     }`}
                     aria-pressed={productView === "terminal"}
                   >
-                    Ground Picture
+                    Ground Control
                   </button>
                 </div>
               </div>
@@ -464,7 +466,7 @@ function InvestorsPage() {
             <SectionTitle
               eyebrow="Investors"
               title="Invest in Solakair"
-              text="Get investor updates from Solakair. Add your email to the investor list."
+              text="We may seek seed investment. Get investor updates from Solakair.  Add your email to the investor list."
             />
 
             <div className="mt-8">
@@ -598,7 +600,7 @@ function PartnersPage() {
             <SectionTitle
               eyebrow="Partners"
               title="Partner with Solakair"
-              text="We seek partnerships with U.S. and allied defense companies."
+              text="We seek partnerships with U.S. and allied defense companies. If you develop quad-copters, micro-missies, air-born radars, RF communication? Anything that can integrate with a drone-mothership, we want to hear from you. "
             />
 
             <div className="mt-8">

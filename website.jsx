@@ -15,6 +15,9 @@ import solakairLogo from "./images/solakair_logo.png";
 import heroBackground from "./images/solace_title_background.png";
 
 //team member images
+import teamImageAndrew from "./team_images/Andrew.png";
+import teamImageYalin from "./team_images/Yalin.png";
+import teamImageMilo from "./team_images/Milo.png";
 import teamImageBojing from "./team_images/Bojing.jpg";
 import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
@@ -154,22 +157,40 @@ function SectionTitle({ eyebrow, title, text, titleClassName = "" }) {
 
 const team = [
   {
+    name: "Yalin Solak",
+    role: "Founder and CEO",
+    bio: "Redefining counter-drone technology by directing the development of autonomous fixed-wing aircraft.",
+    image: teamImageYalin,
+  },
+  {
+    name: "Vishesh Brahmbhatt",
+    role: "Autonomous Systems Engineer",
+    bio: "Builds high-precision autonomous UAV systems using real-time vision and sensor fusion.",
+    image: teamImageVishesh,
+  },
+  {
+    name: "Joyce Berdkan",
+    role: "Systems Engineer",
+    bio: "Develops reliable embedded and control systems for real-time UAV performance.",
+    image: teamImageJoyce,
+  },
+  {
+    name: "Andrew Lao",
+    role: "Software Engineer",
+    bio: "Develops the real-time flight monitoring ground control software (live video, telemetry, diagnostics) to achieve mission success.",
+    image: teamImageAndrew,
+  },
+  {
     name: "Bojing Yu",
     role: "Software Engineer",
     bio: "Builds scalable full-stack platforms and APIs for data-driven applications.",
     image: teamImageBojing,
   },
   {
-    name: "Joyce Berdkand",
-    role: "SYSTEMS ENGINEER",
-    bio: "Develops reliable embedded and control systems for real-time UAV performance.",
-    image: teamImageJoyce,
-  },
-  {
-    name: "Vishesh Brahmbhatt",
-    role: "AUTONOMOUS SYSTEMS ENGINEER",
+    name: "Milo Richard",
+    role: "Mechanical Engineer",
     bio: "Builds high-precision autonomous UAV systems using real-time vision and sensor fusion.",
-    image: teamImageVishesh,
+    image: teamImageMilo,
   },
 ];
 
@@ -809,14 +830,14 @@ export default function App() {
   const inactiveNavItemClass = "text-white/75 hover:bg-white/10 hover:text-white";
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950 text-white">
+    <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-white">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute left-[-10%] top-[-5%] h-72 w-72 rounded-full bg-white/10 blur-3xl" />
         <div className="absolute right-[5%] top-[18%] h-80 w-80 rounded-full bg-white/5 blur-3xl" />
         <div className="absolute bottom-[10%] left-[20%] h-64 w-64 rounded-full bg-white/5 blur-3xl" />
       </div>
 
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
           <div className="flex items-center gap-3">
             <img src={solakairLogo} alt="Solakair logo" className="h-16 w-16 object-contain" />
@@ -876,15 +897,17 @@ export default function App() {
         </div>
       </header>
 
-      {route.page === "home" ? (
-        <HomePage />
-      ) : route.page === "investors" ? (
-        <InvestorsPage />
-      ) : route.page === "partners" ? (
-        <PartnersPage />
-      ) : (
-        <BlankPage />
-      )}
+      <div className="pt-24 md:pt-28">
+        {route.page === "home" ? (
+          <HomePage />
+        ) : route.page === "investors" ? (
+          <InvestorsPage />
+        ) : route.page === "partners" ? (
+          <PartnersPage />
+        ) : (
+          <BlankPage />
+        )}
+      </div>
     </div>
   );
 }

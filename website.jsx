@@ -159,19 +159,19 @@ const team = [
   {
     name: "Yalin Solak",
     role: "Founder and CEO",
-    bio: "Redefining counter-drone technology by directing the development of autonomous fixed-wing aircraft.",
+    bio: "Redefining counter-drone technology by directing the development of autonomous fixed-wing UAS.",
     image: teamImageYalin,
   },
   {
     name: "Vishesh Brahmbhatt",
     role: "Autonomous Systems Engineer",
-    bio: "Builds high-precision autonomous UAV systems using real-time vision and sensor fusion.",
+    bio: "Builds high-precision autonomous UAS systems using real-time vision and sensor fusion.",
     image: teamImageVishesh,
   },
   {
     name: "Joyce Berdkan",
     role: "Systems Engineer",
-    bio: "Develops reliable embedded and control systems for real-time UAV performance.",
+    bio: "Develops reliable embedded and control systems for real-time UAS performance.",
     image: teamImageJoyce,
   },
   {
@@ -189,7 +189,7 @@ const team = [
   {
     name: "Milo Richard",
     role: "Mechanical Engineer",
-    bio: "Builds high-precision autonomous UAV systems using real-time vision and sensor fusion.",
+    bio: "Builds high-precision autonomous UAS systems using real-time vision and sensor fusion.",
     image: teamImageMilo,
   },
 ];
@@ -224,7 +224,7 @@ function HomePage() {
             transition={{ duration: 0.7 }}
             className="relative z-10"
           >
-            <h1 className="hero-title text-5xl font-semibold tracking-tight text-white md:text-6xl">
+            <h1 className="hero-title text-6xl font-semibold tracking-tight text-white md:text-7xl">
               Achieve 
               <br />
               Drone Air Superiority​
@@ -257,9 +257,10 @@ function HomePage() {
               eyebrow="Flagship Platform"
               title={
                 <>
-                  SO-14 Solace 
+                  <span className="text-6xl md:text-7xl">Solace</span>
                   <br />
-                  <span className="whitespace-nowrap">Air Superiority Drone (ASD)</span>
+                  <span className="whitespace-nowrap text-2xl md:text-3xl font-normal block mt-3">Air Superiority Drone (ASD)</span>
+                  <span className="text-sm md:text-base font-normal block mt-4 text-white/80 leading-relaxed">Reusable VTOL drones with 150 km coverage for air defense, strike, ISR, and contested-environment operations including force protection, target acquisition, overwatch, and communications relay. AI-enabled and networked for scalable air superiority.</span>
                 </>
               }
               text=""
@@ -293,11 +294,13 @@ function HomePage() {
                 },
               ].map((item) => (
                 <div key={item.title} className="product-step-card rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                  <div className="flex items-center gap-2.5">
-                    <item.icon className="h-6 w-6 shrink-0 text-cyan-300" aria-hidden="true" />
-                    <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
+                  <div className="grid grid-cols-[auto_1fr] gap-x-6 items-center">
+                    <div className="flex items-center gap-2.5">
+                      <item.icon className="h-6 w-6 shrink-0 text-cyan-300" aria-hidden="true" />
+                      <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
+                    </div>
+                    <p className="text-base leading-7 text-white/60 md:text-lg">{item.description}</p>
                   </div>
-                  <p className="mt-2 text-base leading-7 text-white/60 md:text-lg">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -308,7 +311,7 @@ function HomePage() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.25 }}
             transition={{ duration: 0.6 }}
-            className="product-frame relative self-center overflow-hidden bg-slate-900/70 p-3 shadow-2xl lg:translate-y-12 lg:p-4"
+            className="product-frame relative self-center overflow-hidden bg-slate-900/70 p-1 shadow-2xl lg:translate-y-12 lg:p-1"
           >
             <div className="product-frame-overlay pointer-events-none absolute inset-0" />
             <div className="relative z-10 overflow-hidden border border-white/10 bg-white/5">
@@ -342,7 +345,7 @@ function HomePage() {
               </div>
 
               {productView === "model" ? (
-                <div className="flex h-[360px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="flex h-[520px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={homepageDroneImage}
                     alt="Drone static preview"
@@ -351,7 +354,7 @@ function HomePage() {
                   />
                 </div>
               ) : (
-                <div className="flex h-[360px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="flex h-[520px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={controlImage}
                     alt="Product terminal window"
@@ -377,6 +380,7 @@ function HomePage() {
           <SectionTitle
             eyebrow="Leadership"
             title="Meet the team"
+            titleClassName="text-5xl md:text-6xl"
             text="A focused team page helps present credibility without oversharing internal program details."
           />
 
@@ -394,7 +398,7 @@ function HomePage() {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="mx-auto mb-5 h-36 w-36 rounded-2xl border border-white/10 object-cover"
+                    className="mx-auto mb-5 h-48 w-48 rounded-2xl border border-white/10 object-cover"
                   />
                 ) : (
                   <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-lg font-semibold">

@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Solace SO-14 — Tactical Engagement Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;background:#0a1628;font-family:sans-serif;overflow:hidden}
+.wrap{display:flex;flex-direction:column;height:100vh;background:#0a1628}
+.hdr{background:#0d1f3c;border-bottom:0.5px solid #1e3a5f;padding:7px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.htitle{font-size:12px;font-weight:500;color:#7EB8E8;letter-spacing:0.06em;text-transform:uppercase}
+.map-area{position:relative;flex:1;overflow:hidden;min-height:0}
+#lmap{position:absolute;inset:0;z-index:0;display:none}
+#lmap .leaflet-control-container{display:none}
+svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
+.ctrl{background:#0d1f3c;border-top:0.5px solid #1e3a5f;padding:6px 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.cl{font-size:11px;color:#4a6fa5;white-space:nowrap}
+.cb{font-size:11px;padding:3px 9px;border:0.5px solid #1e3a5f;border-radius:4px;background:transparent;color:#7EB8E8;cursor:pointer;white-space:nowrap;transition:all 0.15s}
+.cb:hover{background:#1a2f4a}
+.cb.active{background:#1D9E75;border-color:#1D9E75;color:#fff}
+.cb.ua-on{background:#e07a20;border-color:#e07a20;color:#fff}
+.msel{font-size:11px;padding:3px 7px;border:0.5px solid #1e3a5f;border-radius:4px;background:#0a1628;color:#7EB8E8;cursor:pointer}
+.hint{font-size:10px;color:#2a4a6a;margin-left:auto}
+.spanel{position:absolute;bottom:8px;left:8px;background:rgba(6,14,28,0.94);border:0.5px solid #1e3a5f;border-radius:6px;padding:10px 14px;min-width:190px;z-index:3}
+.sr{display:flex;justify-content:space-between;gap:16px;margin-bottom:5px;font-size:14px}
+.sr:last-child{margin-bottom:0}
+.sl{color:#4a6fa5}.sv{font-weight:500}
+.sv.g{color:#1D9E75}.sv.r{color:#E24B4A}.sv.y{color:#EF9F27}
+.leg{position:absolute;top:8px;left:8px;background:rgba(6,14,28,0.9);border:0.5px solid #1e3a5f;border-radius:6px;padding:8px 12px;display:flex;flex-direction:column;gap:6px;z-index:3}
+.li{display:flex;align-items:center;gap:8px;font-size:13px;color:#4a6fa5}
+.ld{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+.flash{position:absolute;inset:0;background:rgba(29,158,117,0.12);opacity:0;pointer-events:none;transition:opacity 0.3s}
+.flash.show{opacity:1}
+.alert-box{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);background:rgba(160,20,20,0.95);border:1.5px solid #ff5555;border-radius:6px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.1em;text-transform:uppercase;pointer-events:none;opacity:0;transition:opacity 0.25s;white-space:nowrap}
+.alert-box.show{opacity:1}
+.stag{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(6,14,28,0.92);border:0.5px solid #1e3a5f;border-radius:4px;padding:4px 14px;font-size:11px;color:#4a6fa5;white-space:nowrap;display:none}
+.stag.show{display:block}
+@keyframes pulse{0%{r:20;opacity:0.6}50%{r:34;opacity:0.12}100%{r:20;opacity:0.6}}
+@keyframes gpulse{0%{r:18;opacity:0.5}50%{r:28;opacity:0.08}100%{r:18;opacity:0.5}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hdr">
+  <span class="htitle">Solace SO-14 — tactical engagement map</span>
+  <span style="font-size:10px;color:#2a4a6a">▶ Animate starts from current icon positions</span>
+</div>
+<div class="map-area">
+<div id="lmap"></div>
+<svg id="msvg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
+<defs>
+  <pattern id="tp" patternUnits="userSpaceOnUse" width="40" height="40">
+    <rect width="40" height="40" fill="#1a2a14"/>
+    <ellipse cx="20" cy="20" rx="17" ry="11" fill="none" stroke="#2a3d1e" stroke-width="0.6"/>
+    <ellipse cx="20" cy="20" rx="10" ry="6" fill="none" stroke="#304520" stroke-width="0.5"/>
+  </pattern>
+  <pattern id="sp" patternUnits="userSpaceOnUse" width="60" height="60">
+    <rect width="60" height="60" fill="#141a0e"/>
+    <rect width="30" height="30" fill="#181e10" opacity="0.8"/>
+    <rect x="30" y="30" width="30" height="30" fill="#121608" opacity="0.8"/>
+  </pattern>
+</defs>
+
+<rect id="bd" width="1000" height="520" fill="#0a1628"/>
+<rect id="bt" width="1000" height="520" fill="url(#tp)" opacity="0" style="transition:opacity 0.4s"/>
+<rect id="bs" width="1000" height="520" fill="url(#sp)" opacity="0" style="transition:opacity 0.4s"/>
+<rect id="bb" width="1000" height="520" fill="#1a4a8a" opacity="0" style="transition:opacity 0.4s"/>
+
+<g stroke="#1a2f4a" stroke-width="0.35" opacity="0.4">
+  <line x1="0" y1="104" x2="1000" y2="104"/><line x1="0" y1="208" x2="1000" y2="208"/>
+  <line x1="0" y1="312" x2="1000" y2="312"/><line x1="0" y1="416" x2="1000" y2="416"/>
+  <line x1="200" y1="0" x2="200" y2="520"/><line x1="400" y1="0" x2="400" y2="520"/>
+  <line x1="600" y1="0" x2="600" y2="520"/><line x1="800" y1="0" x2="800" y2="520"/>
+</g>
+
+<rect width="1000" height="520" fill="#1a2f1a" fill-opacity="0.08"/>
+<text x="880" y="45" font-size="12" fill="#8a3a3a" opacity="0.5" letter-spacing="4" text-anchor="middle">RUSSIA</text>
+<text x="280" y="490" font-size="11" fill="#3a6a3a" opacity="0.38" letter-spacing="2" text-anchor="middle">UKRAINE</text>
+
+<!-- Simple original border curve -->
+<path d="M 1000,390 C 940,310 820,200 660,0" fill="none" stroke="#cc2222" stroke-width="1.8" opacity="0.85"/>
+
+<!-- Russian towns -->
+<circle cx="870" cy="120" r="3" fill="#8a3a3a" opacity="0.7"/>
+<text x="878" y="124" font-size="9" fill="#aa6666" opacity="0.8">Belgorod</text>
+<circle cx="930" cy="60" r="3" fill="#8a3a3a" opacity="0.6"/>
+<text x="938" y="64" font-size="9" fill="#995555" opacity="0.7">Kursk</text>
+<circle cx="960" cy="175" r="3" fill="#8a3a3a" opacity="0.55"/>
+<text x="968" y="179" font-size="9" fill="#995555" opacity="0.65">Rossosh</text>
+<circle cx="820" cy="160" r="3" fill="#8a3a3a" opacity="0.55"/>
+<text x="828" y="164" font-size="9" fill="#995555" opacity="0.65">Valuyki</text>
+
+<!-- Cities — original positions -->
+<circle cx="120" cy="420" r="6" fill="#3a7aaa" opacity="0.95" stroke="#6aabdd" stroke-width="0.8"/>
+<text x="132" y="425" font-size="11" fill="#6aabdd" font-weight="600">Kyiv</text>
+<circle cx="740" cy="295" r="5" fill="#3a7aaa" opacity="0.9" stroke="#6aabdd" stroke-width="0.7"/>
+<text x="752" y="300" font-size="11" fill="#6aabdd" font-weight="600">Kharkiv</text>
+<circle cx="560" cy="230" r="4" fill="#3a7aaa" opacity="0.8" stroke="#6aabdd" stroke-width="0.6"/>
+<text x="570" y="235" font-size="10" fill="#6aabdd">Sumy</text>
+<circle cx="510" cy="375" r="4" fill="#3a7aaa" opacity="0.8" stroke="#6aabdd" stroke-width="0.6"/>
+<text x="520" y="380" font-size="10" fill="#6aabdd">Poltava</text>
+<circle cx="260" cy="365" r="3" fill="#2a5a7a" opacity="0.4"/>
+<circle cx="380" cy="448" r="3" fill="#2a5a7a" opacity="0.4"/>
+<circle cx="420" cy="310" r="3" fill="#2a5a7a" opacity="0.4"/>
+<circle cx="300" cy="285" r="3" fill="#2a5a7a" opacity="0.4"/>
+<circle cx="180" cy="335" r="3" fill="#2a5a7a" opacity="0.4"/>
+<circle cx="640" cy="415" r="3" fill="#2a5a7a" opacity="0.4"/>
+<circle cx="820" cy="375" r="3" fill="#2a5a7a" opacity="0.4"/>
+
+<!-- UA interceptors — parallel to border, shifted 40km toward Ukraine -->
+<g id="ua-overlay" opacity="0" style="transition:opacity 0.5s">
+  <g transform="translate(439,149)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="-36" text-anchor="middle" font-size="7" fill="#e09040" opacity="0.7">30km</text><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-1 x3</text></g>
+  <g transform="translate(474,192)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-2 x3</text></g>
+  <g transform="translate(509,235)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-3 x3</text></g>
+  <g transform="translate(544,278)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-4 x3</text></g>
+  <g transform="translate(579,321)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-5 x3</text></g>
+  <g transform="translate(614,364)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-6 x3</text></g>
+  <g transform="translate(649,407)"><circle r="33" fill="#e07a20" fill-opacity="0.1" stroke="#e09040" stroke-width="1" stroke-dasharray="3 2"/><circle r="4" fill="#e07a20" fill-opacity="0.5" stroke="#e09040" stroke-width="0.8"/><polygon points="0,-5 4,3 0,1 -4,3" fill="#e09040"/><text y="13" text-anchor="middle" font-size="7" fill="#e09040">UA-7 x3</text></g>
+  <rect x="228" y="10" width="490" height="32" rx="4" fill="#0a1628" fill-opacity="0.9" stroke="#e09040" stroke-width="0.5"/>
+  <text x="473" y="25" text-anchor="middle" font-size="10" fill="#e09040" font-weight="500">UA Interceptor: $7,500 / engagement  (3 units × $2,500)</text>
+  <text x="473" y="37" text-anchor="middle" font-size="9" fill="#e09040" opacity="0.7">30 km range · 7 positions shown</text>
+  <rect x="228" y="46" width="490" height="32" rx="4" fill="#0a1628" fill-opacity="0.9" stroke="#1D9E75" stroke-width="0.5"/>
+  <text x="473" y="61" text-anchor="middle" font-size="10" fill="#1D9E75" font-weight="500">Solace SO-14: $500 / engagement</text>
+  <text x="473" y="73" text-anchor="middle" font-size="9" fill="#1D9E75" opacity="0.7">150 km range · 1 position shown</text>
+</g>
+
+<!-- 200km launch ring -->
+<circle cx="315" cy="398" r="222" fill="none" stroke="#1a8a58" stroke-width="0.9" stroke-dasharray="5 4" opacity="0.4"/>
+<text x="541" y="395" font-size="8" fill="#1a8a58" opacity="0.5">200km launch radius</text>
+
+<!-- SO-14 range rings -->
+<circle cx="315" cy="398" r="333" fill="none" stroke="#1D9E75" stroke-width="0.7" stroke-dasharray="8 5" opacity="0.12"/>
+<circle id="ring-rem" cx="315" cy="398" r="333" fill="none" stroke="#1D9E75" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+<text id="ring-lbl" x="652" y="396" font-size="9" fill="#1D9E75" opacity="0.55">300km remaining</text>
+
+<line id="iline" x1="315" y1="398" x2="850" y2="70" stroke="#1D9E75" stroke-width="0.9" stroke-dasharray="5 3" opacity="0.3"/>
+
+<!-- Base -->
+<g><rect x="309" y="392" width="12" height="12" rx="1" fill="#0d5c3a" stroke="#1a8a58" stroke-width="1"/>
+<text x="315" y="415" text-anchor="middle" font-size="8" fill="#1a8a58">Base</text></g>
+
+<!-- Geran pulse rings -->
+<circle id="g1p" cx="850" cy="70" r="18" fill="none" stroke="#E24B4A" stroke-width="0.8" opacity="0.4" style="animation:gpulse 2s ease-in-out infinite"/>
+<circle id="g2p" cx="910" cy="120" r="18" fill="none" stroke="#E24B4A" stroke-width="0.8" opacity="0.4" style="animation:gpulse 2s ease-in-out infinite;animation-delay:0.65s"/>
+<circle id="g3p" cx="965" cy="170" r="18" fill="none" stroke="#E24B4A" stroke-width="0.8" opacity="0.4" style="animation:gpulse 2s ease-in-out infinite;animation-delay:1.3s"/>
+
+<!-- Geran icons -->
+<g id="g1" style="cursor:grab" transform="translate(850,70)">
+  <polygon id="g1-tri" points="0,-13 -9,9 9,9" fill="#E24B4A" fill-opacity="0.9" stroke="#E24B4A" stroke-width="0.8"/>
+  <g id="g1-x" opacity="0"><line x1="-8" y1="-8" x2="8" y2="8" stroke="#6a1a1a" stroke-width="2.2"/><line x1="8" y1="-8" x2="-8" y2="8" stroke="#6a1a1a" stroke-width="2.2"/></g>
+  <text id="g1-lbl" y="26" text-anchor="middle" font-size="9" fill="#E24B4A">Geran-2</text>
+</g>
+<g id="g2" style="cursor:grab" transform="translate(910,120)">
+  <polygon id="g2-tri" points="0,-13 -9,9 9,9" fill="#E24B4A" fill-opacity="0.9" stroke="#E24B4A" stroke-width="0.8"/>
+  <g id="g2-x" opacity="0"><line x1="-8" y1="-8" x2="8" y2="8" stroke="#6a1a1a" stroke-width="2.2"/><line x1="8" y1="-8" x2="-8" y2="8" stroke="#6a1a1a" stroke-width="2.2"/></g>
+  <text id="g2-lbl" y="26" text-anchor="middle" font-size="9" fill="#E24B4A">Geran-2</text>
+</g>
+<g id="g3" style="cursor:grab" transform="translate(965,170)">
+  <polygon id="g3-tri" points="0,-13 -9,9 9,9" fill="#E24B4A" fill-opacity="0.9" stroke="#E24B4A" stroke-width="0.8"/>
+  <g id="g3-x" opacity="0"><line x1="-8" y1="-8" x2="8" y2="8" stroke="#6a1a1a" stroke-width="2.2"/><line x1="8" y1="-8" x2="-8" y2="8" stroke="#6a1a1a" stroke-width="2.2"/></g>
+  <text id="g3-lbl" y="26" text-anchor="middle" font-size="9" fill="#E24B4A">Geran-2</text>
+</g>
+
+<line id="tg-line" x1="0" y1="0" x2="0" y2="0" stroke="#EF9F27" stroke-width="1.5" stroke-dasharray="3 2" opacity="0" style="transition:opacity 0.2s"/>
+<circle id="so14p" cx="315" cy="398" r="20" fill="none" stroke="#1D9E75" stroke-width="1" opacity="0"/>
+
+<!-- SO-14 -->
+<g id="so14" style="cursor:grab" transform="translate(315,398)">
+  <circle r="13" fill="#1D9E75" fill-opacity="0.2" stroke="#1D9E75" stroke-width="1.2"/>
+  <polygon points="0,-13 -8,7 0,3 8,7" fill="#1D9E75"/>
+  <text id="so14-lbl" y="26" text-anchor="middle" font-size="9" fill="#1D9E75" font-weight="500">Solace</text>
+</g>
+
+<g id="eng-pt" opacity="0" style="transition:opacity 0.3s">
+  <circle r="14" fill="#1D9E75" fill-opacity="0.2" stroke="#1D9E75" stroke-width="1" stroke-dasharray="3 2"/>
+  <text y="4" text-anchor="middle" font-size="11" fill="#1D9E75">✓</text>
+</g>
+</svg>
+
+<div class="spanel">
+  <div class="sr"><span class="sl">Solace cost</span><span class="sv g">$500</span></div>
+  <div class="sr"><span class="sl">UA cost</span><span class="sv r">$7,500</span></div>
+  <div class="sr"><span class="sl">Max range</span><span class="sv g">300 km</span></div>
+  <div class="sr"><span class="sl">Remaining</span><span class="sv g" id="sv-rem">300 km</span></div>
+  <div class="sr"><span class="sl">Targets hit</span><span class="sv g" id="sv-hits">0 / 3</span></div>
+  <div class="sr"><span class="sl">Status</span><span class="sv" id="sv-status" style="color:#4a6fa5">waiting</span></div>
+</div>
+<div class="leg">
+  <div class="li"><div style="width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:16px solid #E24B4A;flex-shrink:0"></div><span>Geran-2 / Shahed-139</span></div>
+  <div class="li"><div class="ld" style="background:#1D9E75"></div>Solace SO-14</div>
+  <div class="li"><div style="width:14px;height:14px;background:#0d5c3a;border:1.5px solid #1a8a58;border-radius:1px;flex-shrink:0"></div><span>Base</span></div>
+  <div class="li"><div style="width:22px;height:0;border-top:2px dashed #1a8a58;flex-shrink:0;margin-right:2px"></div>200km launch radius</div>
+  <div class="li"><div class="ld" style="background:#e07a20"></div>UA Interceptor ×3</div>
+  <div class="li"><div class="ld" style="background:#3a7aaa"></div>Ukrainian city</div>
+  <div class="li"><div style="width:28px;height:2.5px;background:#cc2222;border-radius:1px;flex-shrink:0;margin-right:2px"></div>UA/RU border</div>
+</div>
+<div class="alert-box" id="alert-box">⚠  INTERCEPT ORDER GIVEN</div>
+<div class="stag" id="stag"></div>
+<div class="flash" id="flash"></div>
+</div>
+
+<div class="ctrl">
+  <span class="cl">Map:</span>
+  <select class="msel" onchange="setBg(this.value)">
+    <option value="dark">Military dark</option>
+    <option value="topo">Topographic</option>
+    <option value="sat">Satellite</option>
+    <option value="sat-blue">Sat+blue</option>
+  </select>
+  <span class="cl">|</span>
+  <button class="cb" id="ua-btn" onclick="toggleUA()">UA Overlay</button>
+  <span class="cl">|</span>
+  <button class="cb scene active" onclick="setScene(0,this)">Detect</button>
+  <button class="cb scene" onclick="setScene(1,this)">Intercept</button>
+  <button class="cb scene" onclick="setScene(2,this)">Engagement</button>
+  <span class="cl">|</span>
+  <button class="cb" style="background:#1a3a6a;border-color:#2a5aaa;color:#7EB8E8;font-weight:500" onclick="animateAll()">▶ Animate</button>
+  <button class="cb" id="pause-btn" onclick="togglePause()" style="display:none">⏸ Pause</button>
+  <button class="cb" onclick="resetAll()">↺ Reset</button>
+  <span class="hint">drag to reposition · Animate uses current positions</span>
+</div>
+</div>
+
+<script>
+const svg=document.getElementById('msvg');
+const g1el=document.getElementById('g1'),g2el=document.getElementById('g2'),g3el=document.getElementById('g3');
+const so14el=document.getElementById('so14'),so14p=document.getElementById('so14p');
+const g1p=document.getElementById('g1p'),g2p=document.getElementById('g2p'),g3p=document.getElementById('g3p');
+const iline=document.getElementById('iline'),engPt=document.getElementById('eng-pt');
+const flash=document.getElementById('flash'),alertBox=document.getElementById('alert-box'),stag=document.getElementById('stag');
+const svRem=document.getElementById('sv-rem'),svHits=document.getElementById('sv-hits'),svStatus=document.getElementById('sv-status');
+const uaOverlay=document.getElementById('ua-overlay'),uaBtn=document.getElementById('ua-btn');
+const ringRem=document.getElementById('ring-rem'),ringLbl=document.getElementById('ring-lbl');
+const tgLine=document.getElementById('tg-line');
+
+const BASE={x:315,y:398};
+const MAX_PX=333,PX_KM=300/MAX_PX,RANGE_FACTOR=0.62;
+const LAUNCH_PX=222; // 200km
+const GERAN_SPD=0.4,SO14_SPD=0.5;
+const BEHIND_DIST=26;
+const AHEAD_DIST=70;
+const KYIV={x:120,y:420};
+
+let uaOn=false,totalMoved=0,hits=0,animating=false,launched=false,paused=false;
+let driftIv=null,launchIv=null,animDriftIv=null;
+let pos={g1:{x:850,y:70},g2:{x:910,y:120},g3:{x:965,y:170},so14:{...BASE}};
+let hdg={g1:0,g2:0,g3:0,so14:0};
+let destroyed={g1:false,g2:false,g3:false};
+let drag=null,doff={x:0,y:0};
+
+// heading: 0=up, 90=right, 180=down, 270=left
+// atan2(dx,-dy) maps SVG vector to this convention correctly
+function heading(from,to){
+  const dx=to.x-from.x,dy=to.y-from.y;
+  return Math.atan2(dx,-dy)*180/Math.PI;
+}
+function dist(a,b){return Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2);}
+function svgPt(e){
+  const r=svg.getBoundingClientRect();
+  const cx=e.touches?e.touches[0].clientX:e.clientX;
+  const cy=e.touches?e.touches[0].clientY:e.clientY;
+  return{x:(cx-r.left)*1000/r.width,y:(cy-r.top)*520/r.height};
+}
+function travelVec(p){
+  const dx=KYIV.x-p.x,dy=KYIV.y-p.y,d=Math.sqrt(dx*dx+dy*dy);
+  return{x:dx/d,y:dy/d};
+}
+function behindPos(gPos,gHdgDeg,d){
+  d=(d===undefined)?BEHIND_DIST:d;
+  const rad=gHdgDeg*Math.PI/180;
+  const ux=Math.sin(rad),uy=-Math.cos(rad);
+  return{x:gPos.x-ux*d,y:gPos.y-uy*d};
+}
+function aheadPos(gPos,gHdgDeg){
+  const rad=gHdgDeg*Math.PI/180;
+  const ux=Math.sin(rad),uy=-Math.cos(rad);
+  return{x:gPos.x+ux*AHEAD_DIST,y:gPos.y+uy*AHEAD_DIST};
+}
+
+function placeSO14(x,y,deg){
+  so14el.setAttribute('transform',`translate(${x},${y}) rotate(${deg})`);
+  document.getElementById('so14-lbl').setAttribute('transform',`rotate(${-deg})`);
+  so14p.setAttribute('cx',x);so14p.setAttribute('cy',y);
+  hdg.so14=deg;
+}
+function placeGeran(k,x,y,deg){
+  const els={g1:g1el,g2:g2el,g3:g3el};
+  els[k].setAttribute('transform',`translate(${x},${y}) rotate(${deg})`);
+  const lbl=document.getElementById(k+'-lbl');if(lbl)lbl.setAttribute('transform',`rotate(${-deg})`);
+  const xmk=document.getElementById(k+'-x');if(xmk)xmk.setAttribute('transform',`rotate(${-deg})`);
+  const pp={g1:g1p,g2:g2p,g3:g3p};pp[k].setAttribute('cx',x);pp[k].setAttribute('cy',y);
+  hdg[k]=deg;
+}
+
+function setSO14Pulse(on){so14p.style.opacity=on?'0.6':'0';so14p.style.animation=on?'pulse 1.1s ease-in-out infinite':'none';}
+function setStatus(t,c='#4a6fa5'){svStatus.textContent=t;svStatus.style.color=c;}
+function showTag(t,c='#4a6fa5'){stag.textContent=t;stag.style.color=c;stag.style.borderColor=c;stag.classList.add('show');}
+function hideTag(){stag.classList.remove('show');}
+function showAlert(){alertBox.classList.add('show');setTimeout(()=>alertBox.classList.remove('show'),2400);}
+
+function updateRing(){
+  const rem=Math.max(0,MAX_PX-totalMoved*RANGE_FACTOR);
+  ringRem.setAttribute('cx',pos.so14.x);ringRem.setAttribute('cy',pos.so14.y);ringRem.setAttribute('r',rem);
+  const rk=Math.round(rem*PX_KM);
+  ringLbl.setAttribute('x',pos.so14.x+rem+4);ringLbl.setAttribute('y',pos.so14.y);
+  ringLbl.textContent=rk+'km remaining';
+  svRem.textContent=rk+' km';
+  svRem.style.color=rk<60?'#E24B4A':rk<130?'#EF9F27':'#1D9E75';
+}
+function updateIline(){
+  let nd=99999,np=pos.g1;
+  ['g1','g2','g3'].forEach(k=>{if(!destroyed[k]){const d=dist(pos.so14,pos[k]);if(d<nd){nd=d;np=pos[k];}}});
+  iline.setAttribute('x1',pos.so14.x);iline.setAttribute('y1',pos.so14.y);
+  iline.setAttribute('x2',np.x);iline.setAttribute('y2',np.y);
+}
+function update(){updateRing();updateIline();svHits.textContent=hits+' / 3';}
+
+function geranStep(){
+  ['g1','g2','g3'].forEach(k=>{
+    if(!destroyed[k]){
+      const v=travelVec(pos[k]);
+      const prev={...pos[k]};
+      pos[k].x+=v.x*GERAN_SPD;pos[k].y+=v.y*GERAN_SPD;
+      placeGeran(k,pos[k].x,pos[k].y,heading(prev,pos[k]));
+    }
+  });
+}
+function startDrift(){if(driftIv)clearInterval(driftIv);driftIv=setInterval(()=>{geranStep();update();},40);}
+function stopDrift(){if(driftIv){clearInterval(driftIv);driftIv=null;}}
+function startAnimDrift(){if(animDriftIv)clearInterval(animDriftIv);animDriftIv=setInterval(()=>{if(paused)return;geranStep();},40);}
+function stopAnimDrift(){if(animDriftIv){clearInterval(animDriftIv);animDriftIv=null;}}
+
+function startLaunchCheck(cb){
+  if(launchIv)clearInterval(launchIv);
+  launchIv=setInterval(()=>{
+    if(paused||launched)return;
+    let nd=99999;
+    ['g1','g2','g3'].forEach(k=>{if(!destroyed[k])nd=Math.min(nd,dist(BASE,pos[k]));});
+    if(nd<=LAUNCH_PX){launched=true;clearInterval(launchIv);cb();}
+  },40);
+}
+function stopLaunchCheck(){if(launchIv){clearInterval(launchIv);launchIv=null;}}
+
+// Fly SO-14 to destination, heading set at start of flight
+function flyTo(dest,speed,onDone){
+  const from={...pos.so14};
+  const dx=dest.x-from.x,dy=dest.y-from.y;
+  const total=Math.sqrt(dx*dx+dy*dy);
+  if(total<0.5){onDone();return;}
+  const deg=heading(from,dest);
+  hdg.so14=deg;
+  let t=0;
+  const iv=setInterval(()=>{
+    if(paused)return;
+    t=Math.min(t+speed/total,1);
+    const prev={...pos.so14};
+    pos.so14={x:from.x+dx*t,y:from.y+dy*t};
+    totalMoved+=dist(prev,pos.so14);
+    placeSO14(pos.so14.x,pos.so14.y,deg);
+    update();
+    if(t>=1){clearInterval(iv);onDone();}
+  },20);
+}
+
+// Smooth rotation — takes shortest arc
+function rotateTo(targetDeg,onDone){
+  const startDeg=hdg.so14;
+  let diff=((targetDeg-startDeg)+540)%360-180;
+  if(Math.abs(diff)<2){placeSO14(pos.so14.x,pos.so14.y,targetDeg);onDone();return;}
+  const steps=Math.max(15,Math.round(Math.abs(diff)/8));
+  let s=0;
+  const iv=setInterval(()=>{
+    if(paused)return;
+    s++;
+    const t=s/steps;
+    const ease=t<0.5?2*t*t:-1+(4-2*t)*t;
+    placeSO14(pos.so14.x,pos.so14.y,startDeg+diff*ease);
+    if(s>=steps){clearInterval(iv);onDone();}
+  },16);
+}
+
+// Chase intercept — dynamically tracks the back midpoint of a moving Geran
+// each frame re-calculates the target so SO-14 follows the live position
+function chaseBehind(gKey,speed,onDone){
+  const ARRIVE=9; // px from triangle back-face midpoint (triangle y=9 from centre)
+  const iv=setInterval(()=>{
+    if(paused)return;
+    const target=behindPos(pos[gKey],hdg[gKey],ARRIVE);
+    const tdx=target.x-pos.so14.x,tdy=target.y-pos.so14.y;
+    const td=Math.sqrt(tdx*tdx+tdy*tdy);
+    if(td<=3){clearInterval(iv);onDone();return;}
+    const step=Math.min(speed,td);
+    const prev={...pos.so14};
+    pos.so14.x+=tdx/td*step;pos.so14.y+=tdy/td*step;
+    totalMoved+=dist(prev,pos.so14);
+    hdg.so14=heading(prev,pos.so14);
+    placeSO14(pos.so14.x,pos.so14.y,hdg.so14);
+    update();
+  },20);
+}
+
+// Tailgate: directly behind Geran, matching speed, 2 seconds
+function tailgate(gKey,onDone){
+  showTag('TAIL-CHASE · locked behind target','#EF9F27');
+  setStatus('tail-chase','#EF9F27');
+  tgLine.style.opacity='0.7';
+  setSO14Pulse(false);
+  const duration=2000,ms=20;
+  let elapsed=0;
+  const iv=setInterval(()=>{
+    if(paused)return;
+    elapsed+=ms;
+    const gk=pos[gKey];
+    const target=behindPos(gk,hdg[gKey]);
+    const tdx=target.x-pos.so14.x,tdy=target.y-pos.so14.y;
+    const td=Math.sqrt(tdx*tdx+tdy*tdy);
+    if(td>0.2){
+      const step=Math.min(GERAN_SPD*1.5,td);
+      const prev={...pos.so14};
+      pos.so14.x+=tdx/td*step;pos.so14.y+=tdy/td*step;
+      totalMoved+=dist(prev,pos.so14);
+    }
+    placeSO14(pos.so14.x,pos.so14.y,hdg[gKey]);
+    tgLine.setAttribute('x1',pos.so14.x);tgLine.setAttribute('y1',pos.so14.y);
+    tgLine.setAttribute('x2',gk.x);tgLine.setAttribute('y2',gk.y);
+    update();
+    if(elapsed>=duration){clearInterval(iv);tgLine.style.opacity='0';hideTag();onDone();}
+  },ms);
+}
+
+function destroyGeran(k){
+  destroyed[k]=true;
+  document.getElementById(k+'-tri').style.opacity='0';
+  document.getElementById(k+'-x').style.opacity='1';
+  const l=document.getElementById(k+'-lbl');if(l){l.style.fill='#6a1a1a';l.textContent='destroyed';}
+  const pp={g1:g1p,g2:g2p,g3:g3p};pp[k].style.opacity='0';pp[k].style.animation='none';
+}
+
+function resetDestroyed(){
+  hits=0;launched=false;
+  ['g1','g2','g3'].forEach(k=>{
+    destroyed[k]=false;
+    document.getElementById(k+'-tri').style.opacity='1';
+    document.getElementById(k+'-x').style.opacity='0';
+    const l=document.getElementById(k+'-lbl');if(l){l.style.fill='#E24B4A';l.textContent='Geran-2';}
+    const pp={g1:g1p,g2:g2p,g3:g3p};pp[k].style.opacity='0.4';pp[k].style.animation='gpulse 2s ease-in-out infinite';
+  });
+  engPt.style.opacity='0';tgLine.style.opacity='0';hideTag();
+}
+
+const INIT={g1:{x:850,y:70},g2:{x:910,y:120},g3:{x:965,y:170},so14:{...BASE}};
+const scenes=[
+  {g1:{x:850,y:70},g2:{x:910,y:120},g3:{x:965,y:170},so14:{...BASE},moved:0},
+  {g1:{x:690,y:190},g2:{x:745,y:245},g3:{x:800,y:295},so14:{x:485,y:335},moved:115},
+  {g1:{x:565,y:272},g2:{x:618,y:322},g3:{x:668,y:368},so14:{x:545,y:292},moved:205},
+];
+
+function initPositions(n){
+  ['g1','g2','g3','so14'].forEach(k=>{if(scenes[n][k])pos[k]={...scenes[n][k]};});
+  totalMoved=scenes[n].moved;
+  ['g1','g2','g3'].forEach(k=>placeGeran(k,pos[k].x,pos[k].y,heading(pos[k],KYIV)));
+  const so14H=n===0?0:heading(scenes[Math.max(0,n-1)].so14||BASE,pos.so14);
+  placeSO14(pos.so14.x,pos.so14.y,so14H);
+  update();
+}
+
+function setScene(n,btn){
+  stopDrift();stopLaunchCheck();stopAnimDrift();setSO14Pulse(false);animating=false;
+  document.querySelectorAll('.scene').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  resetDestroyed();initPositions(n);setStatus('waiting');
+  if(n===0)startDrift();
+}
+function resetAll(){
+  stopDrift();stopLaunchCheck();stopAnimDrift();setSO14Pulse(false);animating=false;
+  resetDestroyed();initPositions(0);setStatus('waiting');
+  document.querySelectorAll('.scene').forEach((b,i)=>b.classList.toggle('active',i===0));
+  startDrift();
+}
+
+// Drag
+[g1el,g2el,g3el,so14el].forEach((el,i)=>{
+  const keys=['g1','g2','g3','so14'],k=keys[i];
+  el.addEventListener('mousedown',e=>{if(animating)return;e.stopPropagation();drag=k;const p=svgPt(e);doff={x:p.x-pos[k].x,y:p.y-pos[k].y};el.style.cursor='grabbing';if(k==='so14')setSO14Pulse(true);});
+  el.addEventListener('touchstart',e=>{if(animating)return;drag=k;const p=svgPt(e);doff={x:p.x-pos[k].x,y:p.y-pos[k].y};if(k==='so14')setSO14Pulse(true);},{passive:true});
+});
+window.addEventListener('mousemove',e=>{
+  if(!drag)return;
+  const p=svgPt(e);
+  const x=Math.max(12,Math.min(988,p.x-doff.x)),y=Math.max(12,Math.min(508,p.y-doff.y));
+  const prev={...pos[drag]};pos[drag]={x,y};
+  if(drag==='so14'){totalMoved+=dist(prev,pos.so14);if(dist(prev,pos.so14)>0.5)hdg.so14=heading(prev,pos.so14);placeSO14(x,y,hdg.so14);}
+  else{if(dist(prev,pos[drag])>0.5)placeGeran(drag,x,y,heading(prev,pos[drag]));}
+  update();
+});
+window.addEventListener('touchmove',e=>{
+  if(!drag)return;
+  const p=svgPt(e);
+  const x=Math.max(12,Math.min(988,p.x-doff.x)),y=Math.max(12,Math.min(508,p.y-doff.y));
+  const prev={...pos[drag]};pos[drag]={x,y};
+  if(drag==='so14'){totalMoved+=dist(prev,pos.so14);if(dist(prev,pos.so14)>0.5)hdg.so14=heading(prev,pos.so14);placeSO14(x,y,hdg.so14);}
+  else{if(dist(prev,pos[drag])>0.5)placeGeran(drag,x,y,heading(prev,pos[drag]));}
+  update();
+},{passive:true});
+window.addEventListener('mouseup',()=>{if(drag){const els={g1:g1el,g2:g2el,g3:g3el,so14:so14el};els[drag].style.cursor='grab';if(drag==='so14')setSO14Pulse(false);}drag=null;});
+window.addEventListener('touchend',()=>{if(drag==='so14')setSO14Pulse(false);drag=null;});
+
+// Leaflet map for topo/satellite backgrounds
+const _lmap=L.map('lmap',{zoomControl:false,attributionControl:false,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false}).setView([49.5,32.5],6);
+const _lyOSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
+const _lyEsri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+let _lyActive=null;
+function setBg(v){
+  const bd=document.getElementById('bd'),lm=document.getElementById('lmap');
+  const bt=document.getElementById('bt'),bs=document.getElementById('bs'),bb=document.getElementById('bb');
+  bt.style.opacity='0';bs.style.opacity='0';bb.style.opacity='0';
+  if(v==='dark'){bd.style.opacity='1';lm.style.display='none';if(_lyActive){_lmap.removeLayer(_lyActive);_lyActive=null;}return;}
+  bd.style.opacity='0';lm.style.display='block';
+  const newLy=v==='topo'?_lyOSM:_lyEsri;
+  if(_lyActive!==newLy){if(_lyActive)_lmap.removeLayer(_lyActive);newLy.addTo(_lmap);_lyActive=newLy;}
+  _lmap.invalidateSize();
+  if(v==='sat-blue'){bb.style.opacity='0.35';}
+}
+function toggleUA(){uaOn=!uaOn;uaOverlay.style.opacity=uaOn?'1':'0';uaBtn.className=uaOn?'cb ua-on':'cb';}
+function togglePause(){
+  paused=!paused;
+  const btn=document.getElementById('pause-btn');
+  btn.textContent=paused?'▶ Continue':'⏸ Pause';
+  btn.style.background=paused?'#1a3a6a':'';
+  btn.style.borderColor=paused?'#2a5aaa':'';
+  btn.style.color=paused?'#7EB8E8':'';
+}
+
+// ── ANIMATE: starts from CURRENT positions, no reset ─────────────────────────
+function animateAll(){
+  if(animating)return;
+  paused=false;
+  const pauseBtn=document.getElementById('pause-btn');
+  pauseBtn.style.display='inline-block';pauseBtn.textContent='⏸ Pause';
+  pauseBtn.style.background='';pauseBtn.style.borderColor='';pauseBtn.style.color='';
+  // Stop passive drift but keep current positions
+  stopDrift();stopLaunchCheck();stopAnimDrift();
+  // Clear any previous destroyed state to allow clean run
+  // but keep current icon positions
+  resetDestroyed();
+  // Reset range tracking from current position
+  totalMoved=0;
+  animating=true;launched=false;
+  // Re-init geran headings from current positions
+  ['g1','g2','g3'].forEach(k=>placeGeran(k,pos[k].x,pos[k].y,heading(pos[k],KYIV)));
+  setStatus('waiting','#4a6fa5');
+  showTag('GERANS DETECTED · awaiting launch window','#E24B4A');
+  startAnimDrift();
+
+  // Check if already within launch range
+  let nd=99999;
+  ['g1','g2','g3'].forEach(k=>{if(!destroyed[k])nd=Math.min(nd,dist(BASE,pos[k]));});
+  if(nd<=LAUNCH_PX){
+    // Already in range — launch immediately
+    launched=true;
+    setTimeout(()=>{showAlert();setStatus('launching','#EF9F27');hideTag();setSO14Pulse(true);setTimeout(runTargets,900);},300);
+  } else {
+    startLaunchCheck(()=>{
+      stopLaunchCheck();showAlert();setStatus('launching','#EF9F27');hideTag();setSO14Pulse(true);
+      setTimeout(runTargets,900);
+    });
+  }
+
+  const targets=['g1','g2','g3'];let ti=0;
+
+  function runTargets(){
+    // Skip already destroyed targets
+    while(ti<targets.length && destroyed[targets[ti]])ti++;
+    if(ti>=targets.length){returnToBase();return;}
+    const gKey=targets[ti];
+
+    setStatus('intercept G'+(ti+1),'#EF9F27');
+    showTag('INTERCEPT G'+(ti+1)+' · get behind target','#EF9F27');
+    chaseBehind(gKey,SO14_SPD,()=>{tailgate(gKey,killAndNext);});
+  }
+
+  function killAndNext(){
+    destroyGeran(targets[ti]);hits++;svHits.textContent=hits+' / 3';
+    engPt.setAttribute('transform',`translate(${pos.so14.x},${pos.so14.y})`);
+    engPt.style.opacity='1';flash.classList.add('show');setSO14Pulse(true);
+    ti++;
+    // Skip destroyed
+    while(ti<targets.length && destroyed[targets[ti]])ti++;
+    // Point toward next target
+    if(ti<targets.length){
+      const nb=behindPos(pos[targets[ti]],hdg[targets[ti]]);
+      placeSO14(pos.so14.x,pos.so14.y,heading(pos.so14,nb));
+    }
+    setTimeout(()=>{flash.classList.remove('show');engPt.style.opacity='0';setTimeout(runTargets,200);},500);
+  }
+
+  function returnToBase(){
+    setStatus('returning','#4a6fa5');showTag('RETURNING TO BASE','#1D9E75');
+    flyTo(BASE,SO14_SPD,()=>{
+      stopAnimDrift();setSO14Pulse(false);
+      placeSO14(pos.so14.x,pos.so14.y,0);
+      setStatus('returned','#1D9E75');hideTag();animating=false;paused=false;
+      document.getElementById('pause-btn').style.display='none';
+    });
+  }
+}
+
+initPositions(0);
+startDrift();
+setTimeout(animateAll, 800);
+</script>
+</body>
+</html>

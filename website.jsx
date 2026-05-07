@@ -729,7 +729,7 @@ function TacticalSimPage() {
 
           <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl">
             <iframe
-              src="/SO-14-tactical-map11.html"
+              src={`${import.meta.env.BASE_URL}SO-14-tactical-map11.html`}
               title="SO-14 Tactical Map"
               className="h-[72vh] w-full rounded-2xl border border-white/10 bg-slate-950"
             />

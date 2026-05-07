@@ -31,11 +31,11 @@ svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
 .leg{position:absolute;top:8px;left:8px;background:rgba(6,14,28,0.9);border:0.5px solid #1e3a5f;border-radius:6px;padding:8px 12px;display:flex;flex-direction:column;gap:6px;z-index:3}
 .li{display:flex;align-items:center;gap:8px;font-size:13px;color:#4a6fa5}
 .ld{width:13px;height:13px;border-radius:50%;flex-shrink:0}
-.flash{position:absolute;inset:0;background:rgba(29,158,117,0.12);opacity:0;pointer-events:none;transition:opacity 0.3s}
+.flash{position:absolute;inset:0;background:rgba(29,158,117,0.12);opacity:0;pointer-events:none;transition:opacity 0.3s;z-index:2}
 .flash.show{opacity:1}
-.alert-box{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);background:rgba(160,20,20,0.95);border:1.5px solid #ff5555;border-radius:6px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.1em;text-transform:uppercase;pointer-events:none;opacity:0;transition:opacity 0.25s;white-space:nowrap}
+.alert-box{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);background:rgba(160,20,20,0.95);border:1.5px solid #ff5555;border-radius:6px;padding:10px 24px;font-size:13px;font-weight:700;color:#fff;letter-spacing:0.1em;text-transform:uppercase;pointer-events:none;opacity:0;transition:opacity 0.25s;white-space:nowrap;z-index:4}
 .alert-box.show{opacity:1}
-.stag{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(6,14,28,0.92);border:0.5px solid #1e3a5f;border-radius:4px;padding:4px 14px;font-size:11px;color:#4a6fa5;white-space:nowrap;display:none}
+.stag{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(6,14,28,0.92);border:0.5px solid #1e3a5f;border-radius:4px;padding:4px 14px;font-size:11px;color:#4a6fa5;white-space:nowrap;display:none;z-index:4}
 .stag.show{display:block}
 @keyframes pulse{0%{r:20;opacity:0.6}50%{r:34;opacity:0.12}100%{r:20;opacity:0.6}}
 @keyframes gpulse{0%{r:18;opacity:0.5}50%{r:28;opacity:0.08}100%{r:18;opacity:0.5}}
@@ -243,7 +243,7 @@ const BEHIND_DIST=26;
 const AHEAD_DIST=70;
 const KYIV={x:120,y:420};
 
-let uaOn=false,totalMoved=0,hits=0,animating=false,launched=false,paused=false;
+let uaOn=false,totalMoved=0,hits=0,animating=false,launched=false,paused=false,animGen=0;
 let driftIv=null,launchIv=null,animDriftIv=null;
 let pos={g1:{x:850,y:70},g2:{x:910,y:120},g3:{x:965,y:170},so14:{...BASE}};
 let hdg={g1:0,g2:0,g3:0,so14:0};
@@ -351,9 +351,10 @@ function flyTo(dest,speed,onDone){
   if(total<0.5){onDone();return;}
   const deg=heading(from,dest);
   hdg.so14=deg;
-  let t=0;
+  let t=0;const myGen=animGen;
   const iv=setInterval(()=>{
     if(paused)return;
+    if(animGen!==myGen){clearInterval(iv);return;}
     t=Math.min(t+speed/total,1);
     const prev={...pos.so14};
     pos.so14={x:from.x+dx*t,y:from.y+dy*t};
@@ -370,9 +371,10 @@ function rotateTo(targetDeg,onDone){
   let diff=((targetDeg-startDeg)+540)%360-180;
   if(Math.abs(diff)<2){placeSO14(pos.so14.x,pos.so14.y,targetDeg);onDone();return;}
   const steps=Math.max(15,Math.round(Math.abs(diff)/8));
-  let s=0;
+  let s=0;const myGen=animGen;
   const iv=setInterval(()=>{
     if(paused)return;
+    if(animGen!==myGen){clearInterval(iv);return;}
     s++;
     const t=s/steps;
     const ease=t<0.5?2*t*t:-1+(4-2*t)*t;
@@ -384,9 +386,10 @@ function rotateTo(targetDeg,onDone){
 // Chase intercept — dynamically tracks the back midpoint of a moving Geran
 // each frame re-calculates the target so SO-14 follows the live position
 function chaseBehind(gKey,speed,onDone){
-  const ARRIVE=9; // px from triangle back-face midpoint (triangle y=9 from centre)
+  const ARRIVE=9;const myGen=animGen;
   const iv=setInterval(()=>{
     if(paused)return;
+    if(animGen!==myGen){clearInterval(iv);return;}
     const target=behindPos(pos[gKey],hdg[gKey],ARRIVE);
     const tdx=target.x-pos.so14.x,tdy=target.y-pos.so14.y;
     const td=Math.sqrt(tdx*tdx+tdy*tdy);
@@ -408,9 +411,10 @@ function tailgate(gKey,onDone){
   tgLine.style.opacity='0.7';
   setSO14Pulse(false);
   const duration=2000,ms=20;
-  let elapsed=0;
+  let elapsed=0;const myGen=animGen;
   const iv=setInterval(()=>{
     if(paused)return;
+    if(animGen!==myGen){clearInterval(iv);return;}
     elapsed+=ms;
     const gk=pos[gKey];
     const target=behindPos(gk,hdg[gKey]);
@@ -474,10 +478,13 @@ function setScene(n,btn){
   if(n===0)startDrift();
 }
 function resetAll(){
+  animGen++;paused=false;
   stopDrift();stopLaunchCheck();stopAnimDrift();setSO14Pulse(false);animating=false;
   resetDestroyed();initPositions(0);setStatus('waiting');
   document.querySelectorAll('.scene').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('pause-btn').style.display='none';
   startDrift();
+  setTimeout(animateAll,800);
 }
 
 // Drag
@@ -507,16 +514,23 @@ window.addEventListener('touchmove',e=>{
 window.addEventListener('mouseup',()=>{if(drag){const els={g1:g1el,g2:g2el,g3:g3el,so14:so14el};els[drag].style.cursor='grab';if(drag==='so14')setSO14Pulse(false);}drag=null;});
 window.addEventListener('touchend',()=>{if(drag==='so14')setSO14Pulse(false);drag=null;});
 
-// Leaflet map for topo/satellite backgrounds
-const _lmap=L.map('lmap',{zoomControl:false,attributionControl:false,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false}).setView([49.5,32.5],6);
-const _lyOSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
-const _lyEsri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
-let _lyActive=null;
+// Leaflet map — lazy init so a slow CDN never blocks the main script
+let _lmap=null,_lyOSM=null,_lyEsri=null,_lyActive=null;
+function _initLeaflet(){
+  if(_lmap)return true;
+  try{
+    _lmap=L.map('lmap',{zoomControl:false,attributionControl:false,dragging:false,touchZoom:false,doubleClickZoom:false,scrollWheelZoom:false,boxZoom:false,keyboard:false}).setView([49.5,32.5],6);
+    _lyOSM=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19});
+    _lyEsri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19});
+    return true;
+  }catch(e){console.warn('Leaflet unavailable',e);return false;}
+}
 function setBg(v){
   const bd=document.getElementById('bd'),lm=document.getElementById('lmap');
   const bt=document.getElementById('bt'),bs=document.getElementById('bs'),bb=document.getElementById('bb');
   bt.style.opacity='0';bs.style.opacity='0';bb.style.opacity='0';
-  if(v==='dark'){bd.style.opacity='1';lm.style.display='none';if(_lyActive){_lmap.removeLayer(_lyActive);_lyActive=null;}return;}
+  if(v==='dark'){bd.style.opacity='1';lm.style.display='none';if(_lmap&&_lyActive){_lmap.removeLayer(_lyActive);_lyActive=null;}return;}
+  if(!_initLeaflet()){bd.style.opacity='1';return;} // fallback if Leaflet missing
   bd.style.opacity='0';lm.style.display='block';
   const newLy=v==='topo'?_lyOSM:_lyEsri;
   if(_lyActive!==newLy){if(_lyActive)_lmap.removeLayer(_lyActive);newLy.addTo(_lmap);_lyActive=newLy;}
@@ -536,7 +550,7 @@ function togglePause(){
 // ── ANIMATE: starts from CURRENT positions, no reset ─────────────────────────
 function animateAll(){
   if(animating)return;
-  paused=false;
+  animGen++;paused=false;
   const pauseBtn=document.getElementById('pause-btn');
   pauseBtn.style.display='inline-block';pauseBtn.textContent='⏸ Pause';
   pauseBtn.style.background='';pauseBtn.style.borderColor='';pauseBtn.style.color='';

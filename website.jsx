@@ -251,13 +251,13 @@ function HomePage() {
       </section>
 
       <section id="product" className="border-y border-white/10 bg-white/[0.03]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-16 lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1.1fr_1.1fr] lg:items-center lg:gap-6 lg:px-8">
           <div>
             <SectionTitle
               eyebrow="Flagship Platform"
               title={
                 <>
-                  <span className="text-6xl md:text-7xl">Solace</span>
+                  <span className="text-9xl md:text-[10rem]">Solace</span>
                   <br />
                   <span className="whitespace-nowrap text-2xl md:text-3xl font-normal block mt-3">Air Superiority Drone (ASD)</span>
                   <span className="text-sm md:text-base font-normal block mt-4 text-white/80 leading-relaxed">Reusable VTOL drones with 150 km coverage for air defense, strike, ISR, and contested-environment operations including force protection, target acquisition, overwatch, and communications relay. AI-enabled and networked for scalable air superiority.</span>
@@ -272,7 +272,7 @@ function HomePage() {
                   title: "Detect",
                   icon: Radar,
                   description:
-                    "Scan the surrounding airspace to detect objects early and maintain situational awareness.",
+                    "Scan the surrounding airspace to detect objects and maintain situational awareness.",
                 },
                 {
                   title: "Identify",
@@ -294,7 +294,7 @@ function HomePage() {
                 },
               ].map((item) => (
                 <div key={item.title} className="product-step-card rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                  <div className="grid grid-cols-[auto_1fr] gap-x-6 items-center">
+                  <div className="grid grid-cols-[9rem_1fr] gap-x-0.3 items-center">
                     <div className="flex items-center gap-2.5">
                       <item.icon className="h-6 w-6 shrink-0 text-cyan-300" aria-hidden="true" />
                       <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
@@ -345,7 +345,7 @@ function HomePage() {
               </div>
 
               {productView === "model" ? (
-                <div className="flex h-[520px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="flex h-[380px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={homepageDroneImage}
                     alt="Drone static preview"
@@ -354,7 +354,7 @@ function HomePage() {
                   />
                 </div>
               ) : (
-                <div className="flex h-[520px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="flex h-[380px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={controlImage}
                     alt="Product terminal window"
@@ -724,14 +724,14 @@ function TacticalSimPage() {
           <SectionTitle
             eyebrow="Simulation"
             title="Tactical Sim"
-            text="Interactive SO-14 tactical map simulation."
+            text="Interactive Solace tactical map simulation."
           />
 
-          <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl">
+          <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl -mx-8 lg:-mx-16">
             <iframe
-              src={`${import.meta.env.BASE_URL}SO-14-tactical-map11.html`}
-              title="SO-14 Tactical Map"
-              className="h-[72vh] w-full rounded-2xl border border-white/10 bg-slate-950"
+              src={`${import.meta.env.BASE_URL}SO-14-tactical-map_v2.html`}
+              title="Tactical Map"
+              className="h-[75vh] w-full rounded-2xl border border-white/10 bg-slate-950"
             />
           </div>
         </div>
@@ -895,6 +895,13 @@ export default function App() {
             </button>
             <button
               type="button"
+              onClick={() => navigateToPage("tactical-sim")}
+              className={`${navItemClass} ${route.page === "tactical-sim" ? activeNavItemClass : inactiveNavItemClass}`}
+            >
+              Tactical Sim
+            </button>
+            <button
+              type="button"
               onClick={() => navigateToSection("team")}
               className={`${navItemClass} ${teamActive ? activeNavItemClass : inactiveNavItemClass}`}
             >
@@ -921,13 +928,6 @@ export default function App() {
               className={`${navItemClass} ${route.page === "partners" ? activeNavItemClass : inactiveNavItemClass}`}
             >
               Partners
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToPage("tactical-sim")}
-              className={`${navItemClass} ${route.page === "tactical-sim" ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Tactical Sim
             </button>
           </nav>
         </div>

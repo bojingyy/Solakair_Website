@@ -194,7 +194,7 @@ const team = [
   },
 ];
 
-const validPages = new Set(["home", "investors", "partners"]);
+const validPages = new Set(["home", "investors", "partners", "tactical-sim"]);
 
 function getCurrentRoute() {
   const params = new URLSearchParams(window.location.search);
@@ -716,6 +716,30 @@ function PartnersPage() {
   );
 }
 
+function TacticalSimPage() {
+  return (
+    <main className="relative">
+      <section className="border-t border-white/10 bg-white/[0.03]">
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+          <SectionTitle
+            eyebrow="Simulation"
+            title="Tactical Sim"
+            text="Interactive SO-14 tactical map simulation."
+          />
+
+          <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl">
+            <iframe
+              src="/SO-14-tactical-map11.html"
+              title="SO-14 Tactical Map"
+              className="h-[72vh] w-full rounded-2xl border border-white/10 bg-slate-950"
+            />
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function BlankPage() {
   return <main className="relative min-h-[70vh]" />;
 }
@@ -898,6 +922,13 @@ export default function App() {
             >
               Partners
             </button>
+            <button
+              type="button"
+              onClick={() => navigateToPage("tactical-sim")}
+              className={`${navItemClass} ${route.page === "tactical-sim" ? activeNavItemClass : inactiveNavItemClass}`}
+            >
+              Tactical Sim
+            </button>
           </nav>
         </div>
       </header>
@@ -909,6 +940,8 @@ export default function App() {
           <InvestorsPage />
         ) : route.page === "partners" ? (
           <PartnersPage />
+        ) : route.page === "tactical-sim" ? (
+          <TacticalSimPage />
         ) : (
           <BlankPage />
         )}

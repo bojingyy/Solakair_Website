@@ -23,12 +23,12 @@ import teamImageJoyce from "./team_images/Joyce.jpg";
 import teamImageVishesh from "./team_images/Vishesh.jpeg";
 
 //homepage drone image (will be replaced by interactive 3D model in the future))
-import homepageDroneImage from "./images/homepage_drone_image.png";
+import homepageDroneImage from "./images/homepage_silver.png";
 
 //investor page drone image (top-view)
-import topviewDroneImage from "./images/top_view_v4.png";
+import topviewDroneImage from "./images/investor_silver.png";
 //partners page image
-import partnerImage from "./images/partner_image_v1.png";
+import partnerImage from "./images/partner_silver.png";
 //homepage product ground control image
 import controlImage from "./images/controll_image.png";
 
@@ -145,9 +145,9 @@ function ModelViewer() {
 
 */
 
-function SectionTitle({ eyebrow, title, text, titleClassName = "" }) {
+function SectionTitle({ eyebrow, title, text, titleClassName = "", className = "max-w-2xl" }) {
   return (
-    <div className="max-w-2xl">
+    <div className={className}>
       <p className="mb-3 text-sm uppercase tracking-[0.25em] text-white/60">{eyebrow}</p>
       <h2 className={`text-4xl font-semibold tracking-tight text-white md:text-5xl ${titleClassName}`.trim()}>{title}</h2>
       {text ? <p className="mt-4 text-base leading-7 text-white/70">{text}</p> : null}
@@ -177,7 +177,7 @@ const team = [
   {
     name: "Andrew Lao",
     role: "Software Engineer",
-    bio: "Develops the real-time flight monitoring ground control software (live video, telemetry, diagnostics) to achieve mission success.",
+    bio: "Develops the real-time flight monitoring ground control software to achieve mission success.",
     image: teamImageAndrew,
   },
   {
@@ -235,13 +235,13 @@ function HomePage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <a
                 href="#product"
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 shadow-[0_4px_16px_rgba(0,0,0,0.45)] transition hover:scale-[1.02]"
               >
                 View Product
               </a>
               <a
                 href="#contact"
-                className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 shadow-[0_4px_16px_rgba(0,0,0,0.45)] transition hover:scale-[1.02]"
               >
                 Contact Team
               </a>
@@ -382,6 +382,7 @@ function HomePage() {
             title="Meet the team"
             titleClassName="text-5xl md:text-6xl"
             text="A focused team page helps present credibility without oversharing internal program details."
+            className="max-w-4xl"
           />
 
           <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -392,13 +393,13 @@ function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
-                className="team-member-card rounded-[1.75rem] border border-white/10 bg-white/5 p-6 text-center shadow-xl"
+                className="team-member-card rounded-[1.75rem] border border-white/10 bg-white/5 px-6 py-4 text-center shadow-xl"
               >
                 {member.image ? (
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="mx-auto mb-5 h-48 w-48 rounded-2xl border border-white/10 object-cover"
+                    className="mx-auto mb-5 h-64 w-64 rounded-2xl border border-white/10 object-cover"
                   />
                 ) : (
                   <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-white/10 text-lg font-semibold">
@@ -408,9 +409,9 @@ function HomePage() {
                       .join("")}
                   </div>
                 )}
-                <h3 className="text-xl font-semibold text-white">{member.name}</h3>
-                <p className="mt-2 text-sm uppercase tracking-[0.18em] text-white/50">{member.role}</p>
-                <p className="mt-4 text-sm leading-7 text-white/70">{member.bio}</p>
+                <h3 className="mt-2 text-xl font-semibold text-white">{member.name}</h3>
+                <p className="mt-1 text-sm uppercase tracking-[0.18em] text-white/50">{member.role}</p>
+                <p className="mt-2 text-sm leading-6 text-white/70">{member.bio}</p>
               </motion.div>
             ))}
           </div>

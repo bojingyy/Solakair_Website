@@ -260,7 +260,7 @@ function HomePage() {
                   <span className="text-9xl md:text-[10rem]">Solace</span>
                   <br />
                   <span className="whitespace-nowrap text-2xl md:text-3xl font-normal block mt-3">Air Superiority Drone (ASD)</span>
-                  <span className="text-sm md:text-base font-normal block mt-4 text-white/80 leading-relaxed">Reusable VTOL drones with 150 km coverage for air defense, strike, ISR, and contested-environment operations including force protection, target acquisition, overwatch, and communications relay. AI-enabled and networked for scalable air superiority.</span>
+                  <span className="text-base md:text-lg font-normal block mt-4 leading-7 text-white/60">Reusable VTOL drones with 150 km coverage for air defense, strike, ISR, and contested-environment operations including force protection, target acquisition, overwatch, and communications relay. AI-enabled and networked for scalable air superiority.</span>
                 </>
               }
               text=""

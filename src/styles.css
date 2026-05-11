@@ -40,9 +40,10 @@ canvas {
 
 .hero-sky {
   background-color: transparent;
-  background-position: center top;
+  background-position: center center;
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
+  background-attachment: scroll;
   filter: none;
   transform: none;
 }

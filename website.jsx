@@ -4,7 +4,7 @@ import { Suspense, useEffect, useRef, useState } from "react";
 // import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
 //icons
-import { Mail, MapPin, Radar, Target } from "lucide-react";
+import { Mail, MapPin, Radar, Target, Menu, X } from "lucide-react";
 //crosshair icon for product description card (Engage)
 import { PiCrosshairBold } from "react-icons/pi";
 //airplane icon for product description card (Identify)
@@ -752,6 +752,8 @@ export default function App() {
   const [pendingSection, setPendingSection] = useState(route.section || "");
   const homeMenuRef = useRef(null);
   const closeMenuTimerRef = useRef(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     function syncRoute() {
@@ -782,6 +784,17 @@ export default function App() {
     return () => {
       document.removeEventListener("mousedown", handlePointerDown);
     };
+  }, []);
+
+  useEffect(() => {
+    function handleMobileOutside(event) {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleMobileOutside);
+    return () => document.removeEventListener("mousedown", handleMobileOutside);
   }, []);
 
   useEffect(() => {
@@ -877,60 +890,130 @@ export default function App() {
             </div>
           </div>
 
-          <nav className="flex items-center gap-2 text-sm md:gap-3 md:text-base">
-            <div className="flex items-center rounded-full border border-white/10 bg-white/5">
+          <nav className="flex items-center gap-2 text-sm lg:gap-3 lg:text-base">
+            {/* Desktop nav (hidden on small screens) */}
+            <div className="hidden lg:flex items-center gap-2">
+              <div className="flex items-center rounded-full border border-white/10 bg-white/5">
+                <button
+                  type="button"
+                  onClick={() => navigateToPage("home")}
+                  className={`${navItemClass} ${homeActive ? activeNavItemClass : inactiveNavItemClass}`}
+                >
+                  Home
+                </button>
+              </div>
+
               <button
                 type="button"
-                onClick={() => navigateToPage("home")}
-                className={`${navItemClass} ${homeActive ? activeNavItemClass : inactiveNavItemClass}`}
+                onClick={() => navigateToSection("product")}
+                className={`${navItemClass} ${productActive ? activeNavItemClass : inactiveNavItemClass}`}
               >
-                Home
+                Product
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToPage("tactical-sim")}
+                className={`${navItemClass} ${route.page === "tactical-sim" ? activeNavItemClass : inactiveNavItemClass}`}
+              >
+                Tactical Sim
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToSection("team")}
+                className={`${navItemClass} ${teamActive ? activeNavItemClass : inactiveNavItemClass}`}
+              >
+                Team
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToSection("contact")}
+                className={`${navItemClass} ${contactActive ? activeNavItemClass : inactiveNavItemClass}`}
+              >
+                Contact
+              </button>
+
+              <button
+                type="button"
+                onClick={() => navigateToPage("investors")}
+                className={`${navItemClass} ${route.page === "investors" ? activeNavItemClass : inactiveNavItemClass}`}
+              >
+                Investors
+              </button>
+              <button
+                type="button"
+                onClick={() => navigateToPage("partners")}
+                className={`${navItemClass} ${route.page === "partners" ? activeNavItemClass : inactiveNavItemClass}`}
+              >
+                Partners
               </button>
             </div>
 
-            <button
-              type="button"
-              onClick={() => navigateToSection("product")}
-              className={`${navItemClass} ${productActive ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Product
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToPage("tactical-sim")}
-              className={`${navItemClass} ${route.page === "tactical-sim" ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Tactical Sim
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToSection("team")}
-              className={`${navItemClass} ${teamActive ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Team
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToSection("contact")}
-              className={`${navItemClass} ${contactActive ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Contact
-            </button>
+            {/* Mobile menu button */}
+            <div className="lg:hidden relative">
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen((s) => !s)}
+                className="rounded-full p-2 border border-white/10 bg-white/5 text-white/90"
+                aria-expanded={mobileMenuOpen}
+                aria-label="Open navigation menu"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
 
-            <button
-              type="button"
-              onClick={() => navigateToPage("investors")}
-              className={`${navItemClass} ${route.page === "investors" ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Investors
-            </button>
-            <button
-              type="button"
-              onClick={() => navigateToPage("partners")}
-              className={`${navItemClass} ${route.page === "partners" ? activeNavItemClass : inactiveNavItemClass}`}
-            >
-              Partners
-            </button>
+              {mobileMenuOpen && (
+                <div ref={mobileMenuRef} className="absolute right-0 mt-2 w-56 rounded-lg bg-slate-950/95 border border-white/10 shadow-lg p-2 z-50">
+                  <button
+                    type="button"
+                    onClick={() => { navigateToPage("home"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${homeActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Home
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { navigateToSection("product"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${productActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Product
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { navigateToPage("tactical-sim"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${route.page === "tactical-sim" ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Tactical Sim
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { navigateToSection("team"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${teamActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Team
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { navigateToSection("contact"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${contactActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Contact
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { navigateToPage("investors"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${route.page === "investors" ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Investors
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { navigateToPage("partners"); setMobileMenuOpen(false); }}
+                    className={`w-full text-left rounded px-3 py-2 ${route.page === "partners" ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
+                  >
+                    Partners
+                  </button>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </header>

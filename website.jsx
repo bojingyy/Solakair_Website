@@ -227,7 +227,9 @@ function HomePage() {
             <h1 className="hero-title text-6xl font-semibold tracking-tight text-white md:text-7xl">
               Achieve 
               <br />
-              Drone Air Superiority​
+              Drone
+              <br />
+              Air Superiority​
             </h1>
             <p className="hero-subtitle mt-6 max-w-xl text-xl font-semibold leading-8 text-white md:text-2xl">
               Neutralize hostile drones and UAS

@@ -489,7 +489,7 @@ function InvestorsPage() {
   return (
     <main className="relative">
       <section className="border-t border-white/10 bg-white/[0.03]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 pt-6 pb-10 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:px-8 lg:pt-8">
           <div>
             <SectionTitle
               eyebrow="Investors"
@@ -623,7 +623,7 @@ function PartnersPage() {
   return (
     <main className="relative">
       <section className="border-t border-white/10 bg-white/[0.03]">
-        <div className="mx-auto grid max-w-7xl gap-10 px-6 py-20 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 px-6 pt-6 pb-10 lg:grid-cols-[1fr_0.95fr] lg:items-center lg:px-8 lg:pt-8">
           <div>
             <SectionTitle
               eyebrow="Partners"
@@ -722,11 +722,11 @@ function TacticalSimPage() {
   return (
     <main className="relative">
       <section className="border-t border-white/10 bg-white/[0.03]">
-        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+        <div className="mx-auto max-w-7xl px-6 pt-6 pb-8 lg:px-8 lg:pt-8">
           <SectionTitle
-            eyebrow="Simulation"
+            eyebrow="Interactive Solace tactical map simulation."
             title="Tactical Sim"
-            text="Interactive Solace tactical map simulation."
+            text=""
           />
 
           <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl -mx-8 lg:-mx-16">

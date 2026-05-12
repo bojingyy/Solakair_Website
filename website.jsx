@@ -1018,7 +1018,7 @@ export default function App() {
         </div>
       </header>
 
-      <div className="pt-24 md:pt-28">
+      <div className="pt-24 md:pt-24">
         {route.page === "home" ? (
           <HomePage />
         ) : route.page === "investors" ? (

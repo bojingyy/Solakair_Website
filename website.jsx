@@ -729,11 +729,11 @@ function TacticalSimPage() {
             text=""
           />
 
-          <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl -mx-8 lg:-mx-16">
+          <div className="mt-8 w-full overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 p-2 shadow-2xl">
             <iframe
               src={`${import.meta.env.BASE_URL}SO-14-tactical-map_v2.html`}
               title="Tactical Map"
-              className="h-[75vh] w-full rounded-2xl border border-white/10 bg-slate-950"
+              className="block h-[60vh] min-h-[420px] w-full rounded-2xl border border-white/10 bg-slate-950 md:h-[70vh]"
             />
           </div>
         </div>

@@ -189,7 +189,7 @@ const team = [
   {
     name: "Milo Richard",
     role: "Mechanical Engineer",
-    bio: "Builds high-precision autonomous UAS systems using real-time vision and sensor fusion.",
+    bio: "Engineers the hardware that makes a fixed-wing aircraft take off and land like a helicopter.",
     image: teamImageMilo,
   },
 ];

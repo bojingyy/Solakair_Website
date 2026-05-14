@@ -198,8 +198,209 @@ canvas {
   }
 }
 
+@media (min-width: 768px) {
+  /* Slightly larger product title on tablets/desktops */
+  #product .text-9xl {
+    font-size: 11rem;
+    line-height: 0.9;
+  }
+}
+
 @media (max-width: 1023px) {
   .hero-section {
     min-height: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .app-main-offset {
+    padding-top: 8rem;
+  }
+
+  .mobile-tabs-scroll {
+    overflow-x: visible;
+  }
+
+  .mobile-tabs-row {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+    gap: 0.45rem;
+    padding-bottom: 0.15rem;
+  }
+
+  .mobile-tabs-row > * {
+    grid-column: span 2;
+    width: 100%;
+  }
+
+  .mobile-tabs-row > :nth-child(5) {
+    grid-column: 2 / span 2;
+  }
+
+  .mobile-tabs-row > :nth-child(6) {
+    grid-column: 4 / span 2;
+  }
+
+  .mobile-tabs-row > :nth-child(7) {
+    grid-column: 6 / span 2;
+  }
+
+  .mobile-tabs-row > div > button {
+    width: 100%;
+  }
+
+  .mobile-nav-item {
+    padding: 0.42rem 0.74rem;
+    font-size: 0.79rem;
+    line-height: 1;
+  }
+
+  .hero-content {
+    padding-top: 5.5rem;
+    padding-bottom: 4rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.35rem, 12vw, 3.3rem);
+    line-height: 0.95;
+    letter-spacing: 0.01em;
+  }
+
+  .hero-subtitle {
+    margin-top: 1.1rem;
+    max-width: 24ch;
+    font-size: 1.03rem;
+    line-height: 1.5;
+  }
+
+  .hero-cta-row {
+    display: flex;
+    flex-wrap: nowrap;
+    width: min(100%, 24rem);
+    gap: 0.55rem;
+  }
+
+  .hero-cta-row a {
+    display: inline-flex;
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
+    padding: 0.62rem 0.7rem;
+    font-size: 0.86rem;
+  }
+
+  .product-step-grid {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+    align-items: flex-start;
+  }
+
+  .product-step-grid p {
+    margin: 0;
+  }
+
+  .product-preview-panel {
+    height: 16.5rem;
+    padding: 0.4rem;
+  }
+
+  /* Product section: prevent horizontal overflow on small screens */
+  #product .max-w-7xl {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
+  }
+
+  /* Reduce oversized product title "Solace" on phones */
+  #product .text-9xl {
+    font-size: clamp(3.8rem, 20vw, 9.5rem);
+    line-height: 0.9;
+  }
+
+  /* Allow lines that were forced nowrap to wrap on mobile */
+  #product .whitespace-nowrap {
+    white-space: normal;
+  }
+
+  /* Slightly larger ASD subtitle on mobile */
+  #product .product-title-asd {
+    font-size: clamp(1.05rem, 3vw, 1.4rem);
+    line-height: 1.15;
+  }
+
+  /* Ensure product frame and images never exceed container width */
+  #product .product-frame,
+  #product .product-preview-panel {
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  #product img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Make product step cards wrap content and not push width */
+  #product .product-step-card {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* Reduce vertical spacing between sections on mobile */
+  section .max-w-7xl {
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+  }
+
+  /* Slightly tighten common vertical utilities used in sections */
+  .mt-8 {
+    margin-top: 0.5rem !important;
+  }
+
+
+
+  .team-member-card {
+    padding: 0.8rem 0.75rem;
+  }
+
+  .team-member-card img {
+    width: 8.5rem;
+    height: 8.5rem;
+    object-fit: cover;
+  }
+
+  .lead-capture-row {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .lead-capture-row input {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .lead-capture-row button {
+    width: 100%;
+  }
+
+  .brand-wordmark {
+    font-size: 1.45rem;
+    letter-spacing: 0.05em;
+  }
+
+  .brand-logo {
+    width: 2.55rem;
+    height: 2.55rem;
+  }
+
+  iframe[title="Tactical Map"] {
+    min-height: 19rem;
+    height: 60vh;
   }
 }

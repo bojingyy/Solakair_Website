@@ -1,10 +1,10 @@
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 // 3D viewer temporarily disabled — keep imports commented for future re-enable
 // import { Canvas } from "@react-three/fiber";
 // import { OrbitControls, Float, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
 //icons
-import { Mail, MapPin, Radar, Target, Menu, X } from "lucide-react";
+import { Mail, MapPin, Radar, Target } from "lucide-react";
 //crosshair icon for product description card (Engage)
 import { PiCrosshairBold } from "react-icons/pi";
 //airplane icon for product description card (Identify)
@@ -234,7 +234,7 @@ function HomePage() {
             <p className="hero-subtitle mt-6 max-w-xl text-xl font-semibold leading-8 text-white md:text-2xl">
               Neutralize hostile drones and UAS
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="hero-cta-row mt-8 flex flex-wrap gap-4">
               <a
                 href="#product"
                 className="inline-flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 font-medium text-slate-950 shadow-[0_4px_16px_rgba(0,0,0,0.45)] transition hover:scale-[1.02]"
@@ -261,7 +261,7 @@ function HomePage() {
                 <>
                   <span className="text-9xl md:text-[10rem]">Solace</span>
                   <br />
-                  <span className="whitespace-nowrap text-2xl md:text-3xl font-normal block mt-3">Air Superiority Drone (ASD)</span>
+                  <span className="whitespace-nowrap text-2xl md:text-3xl font-normal block mt-3 product-title-asd">Air Superiority Drone (ASD)</span>
                   <span className="text-base md:text-lg font-normal block mt-4 leading-7 text-white/60">Reusable VTOL drones with 150 km coverage for air defense, strike, ISR, and contested-environment operations including force protection, target acquisition, overwatch, and communications relay. AI-enabled and networked for scalable air superiority.</span>
                 </>
               }
@@ -296,7 +296,7 @@ function HomePage() {
                 },
               ].map((item) => (
                 <div key={item.title} className="product-step-card rounded-3xl border border-white/10 bg-slate-900/80 p-5">
-                  <div className="grid grid-cols-[9rem_1fr] gap-x-0.3 items-center">
+                  <div className="product-step-grid grid grid-cols-[9rem_1fr] gap-x-0.3 items-center">
                     <div className="flex items-center gap-2.5">
                       <item.icon className="h-6 w-6 shrink-0 text-cyan-300" aria-hidden="true" />
                       <p className="text-xl font-medium text-white md:text-2xl">{item.title}</p>
@@ -347,7 +347,7 @@ function HomePage() {
               </div>
 
               {productView === "model" ? (
-                <div className="flex h-[380px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="product-preview-panel flex h-[380px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={homepageDroneImage}
                     alt="Drone static preview"
@@ -356,7 +356,7 @@ function HomePage() {
                   />
                 </div>
               ) : (
-                <div className="flex h-[380px] w-full items-center justify-center bg-slate-950/80 p-2">
+                <div className="product-preview-panel flex h-[380px] w-full items-center justify-center bg-slate-950/80 p-2">
                   <img
                     src={controlImage}
                     alt="Product terminal window"
@@ -387,7 +387,7 @@ function HomePage() {
             className="max-w-4xl"
           />
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {team.map((member, index) => (
               <motion.div
                 key={member.name}
@@ -466,7 +466,7 @@ function InvestorsPage() {
     await postToAppsScript({ action: "investor", email: investorEmail });
     setInvLoading(false);
     setInvestorEmail("");
-    alert("You've been added to the investor list!");
+    alert("You've been added to the investor newsletter!");
   }
 
   async function handleSendMessage() {
@@ -494,13 +494,12 @@ function InvestorsPage() {
             <SectionTitle
               eyebrow="Investors"
               title="Invest in Solakair"
-              text="We may seek seed investment. Get investor updates from Solakair.  Add your email to the investor list."
+              text="We may seek seed investment. Get investor updates from Solakair.  Add your email to the investor newsletter."
             />
 
             <div className="mt-8">
               <form className="flex flex-col items-start gap-3">
-                <label className="text-sm uppercase tracking-[0.12em] text-white/60">Add email to investor list</label>
-                <div className="flex items-center gap-3">
+                <div className="lead-capture-row flex items-center gap-3">
                   <input
                     type="email"
                     name="investorEmail"
@@ -633,8 +632,8 @@ function PartnersPage() {
 
             <div className="mt-8">
               <form className="flex flex-col items-start gap-3">
-                <label className="text-sm uppercase tracking-[0.12em] text-white/60">Add email to partner list</label>
-                <div className="flex items-center gap-3">
+                <label className="text-sm uppercase tracking-[0.12em] text-white/85">Add email to partner inquiry list</label>
+                <div className="lead-capture-row flex items-center gap-3">
                   <input
                     type="email"
                     name="partnerEmail"
@@ -748,19 +747,13 @@ function BlankPage() {
 
 export default function App() {
   const [route, setRoute] = useState(() => getCurrentRoute());
-  const [isHomeMenuOpen, setIsHomeMenuOpen] = useState(false);
   const [pendingSection, setPendingSection] = useState(route.section || "");
-  const homeMenuRef = useRef(null);
-  const closeMenuTimerRef = useRef(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     function syncRoute() {
       const nextRoute = getCurrentRoute();
       setRoute(nextRoute);
       setPendingSection(nextRoute.section || "");
-      setIsHomeMenuOpen(false);
     }
 
     window.addEventListener("popstate", syncRoute);
@@ -769,39 +762,6 @@ export default function App() {
     return () => {
       window.removeEventListener("popstate", syncRoute);
       window.removeEventListener("hashchange", syncRoute);
-    };
-  }, []);
-
-  useEffect(() => {
-    function handlePointerDown(event) {
-      if (homeMenuRef.current && !homeMenuRef.current.contains(event.target)) {
-        setIsHomeMenuOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-
-    return () => {
-      document.removeEventListener("mousedown", handlePointerDown);
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleMobileOutside(event) {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
-        setMobileMenuOpen(false);
-      }
-    }
-
-    document.addEventListener("mousedown", handleMobileOutside);
-    return () => document.removeEventListener("mousedown", handleMobileOutside);
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (closeMenuTimerRef.current) {
-        window.clearTimeout(closeMenuTimerRef.current);
-      }
     };
   }, []);
 
@@ -836,40 +796,18 @@ export default function App() {
 
   function navigateToPage(page) {
     updateRoute(page);
-    setIsHomeMenuOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function navigateToSection(section) {
     updateRoute("home", section);
-    setIsHomeMenuOpen(false);
-  }
-
-  function openHomeMenu() {
-    if (closeMenuTimerRef.current) {
-      window.clearTimeout(closeMenuTimerRef.current);
-      closeMenuTimerRef.current = null;
-    }
-
-    setIsHomeMenuOpen(true);
-  }
-
-  function closeHomeMenu() {
-    if (closeMenuTimerRef.current) {
-      window.clearTimeout(closeMenuTimerRef.current);
-    }
-
-    closeMenuTimerRef.current = window.setTimeout(() => {
-      setIsHomeMenuOpen(false);
-      closeMenuTimerRef.current = null;
-    }, 180);
   }
 
   const homeActive = route.page === "home" && (!route.section || route.section === "");
   const productActive = route.page === "home" && route.section === "product";
   const teamActive = route.page === "home" && route.section === "team";
   const contactActive = route.page === "home" && route.section === "contact";
-  const navItemClass = "rounded-full px-4 py-2 transition";
+  const navItemClass = "mobile-nav-item whitespace-nowrap rounded-full px-4 py-2 transition";
   const activeNavItemClass = "bg-white text-slate-950";
   const inactiveNavItemClass = "text-white/75 hover:bg-white/10 hover:text-white";
 
@@ -882,17 +820,16 @@ export default function App() {
       </div>
 
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-start gap-2 px-4 py-3 lg:flex-row lg:items-center lg:justify-between lg:gap-0 lg:px-8 lg:py-4">
           <div className="flex items-center gap-3">
-            <img src={solakairLogo} alt="Solakair logo" className="h-16 w-16 object-contain" />
+            <img src={solakairLogo} alt="Solakair logo" className="brand-logo h-16 w-16 object-contain" />
             <div>
-              <p className="text-4xl font-semibold tracking-[0.1em]">Solakair</p>
+              <p className="brand-wordmark text-4xl font-semibold tracking-[0.1em]">Solakair</p>
             </div>
           </div>
 
-          <nav className="flex items-center gap-2 text-sm lg:gap-3 lg:text-base">
-            {/* Desktop nav (hidden on small screens) */}
-            <div className="hidden lg:flex items-center gap-2">
+          <nav className="mobile-tabs-scroll w-full overflow-x-auto text-sm lg:w-auto lg:overflow-visible lg:text-base">
+            <div className="mobile-tabs-row flex min-w-max items-center gap-2 lg:min-w-0">
               <div className="flex items-center rounded-full border border-white/10 bg-white/5">
                 <button
                   type="button"
@@ -947,78 +884,11 @@ export default function App() {
                 Partners
               </button>
             </div>
-
-            {/* Mobile menu button */}
-            <div className="lg:hidden relative">
-              <button
-                type="button"
-                onClick={() => setMobileMenuOpen((s) => !s)}
-                className="rounded-full p-2 border border-white/10 bg-white/5 text-white/90"
-                aria-expanded={mobileMenuOpen}
-                aria-label="Open navigation menu"
-              >
-                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-              </button>
-
-              {mobileMenuOpen && (
-                <div ref={mobileMenuRef} className="absolute right-0 mt-2 w-56 rounded-lg bg-slate-950/95 border border-white/10 shadow-lg p-2 z-50">
-                  <button
-                    type="button"
-                    onClick={() => { navigateToPage("home"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${homeActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Home
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { navigateToSection("product"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${productActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Product
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { navigateToPage("tactical-sim"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${route.page === "tactical-sim" ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Tactical Sim
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { navigateToSection("team"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${teamActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Team
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { navigateToSection("contact"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${contactActive ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Contact
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { navigateToPage("investors"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${route.page === "investors" ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Investors
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { navigateToPage("partners"); setMobileMenuOpen(false); }}
-                    className={`w-full text-left rounded px-3 py-2 ${route.page === "partners" ? activeNavItemClass : 'text-white/80 hover:bg-white/5'}`}
-                  >
-                    Partners
-                  </button>
-                </div>
-              )}
-            </div>
           </nav>
         </div>
       </header>
 
-      <div className="pt-24 md:pt-24">
+      <div className="app-main-offset pt-24 md:pt-24">
         {route.page === "home" ? (
           <HomePage />
         ) : route.page === "investors" ? (

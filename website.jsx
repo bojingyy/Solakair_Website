@@ -383,7 +383,6 @@ function HomePage() {
             eyebrow="Leadership"
             title="Meet the team"
             titleClassName="text-5xl md:text-6xl"
-            text="A focused team page helps present credibility without oversharing internal program details."
             className="max-w-4xl"
           />
 

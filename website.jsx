@@ -189,7 +189,7 @@ const team = [
   {
     name: "Milo Richard",
     role: "Mechanical Engineer",
-    bio: "Engineers the hardware that makes a fixed-wing aircraft take off and land like a helicopter.",
+    bio: "Engineers vertical landing and take off capability.",
     image: teamImageMilo,
   },
 ];

@@ -229,9 +229,10 @@ function HomePage() {
               <br />
               Drone
               <br />
-              Air Superiority​
+              <span className="block md:inline">Air</span>
+              <span className="block md:inline md:ml-3">Superiority​</span>
             </h1>
-            <p className="hero-subtitle mt-6 max-w-xl text-xl font-semibold leading-8 text-white md:text-2xl">
+            <p className="hero-subtitle mt-6 max-w-xl whitespace-nowrap text-[0.9rem] font-semibold leading-8 text-white sm:text-xl md:text-2xl">
               Neutralize hostile drones and UAS
             </p>
             <div className="hero-cta-row mt-8 flex flex-wrap gap-4">

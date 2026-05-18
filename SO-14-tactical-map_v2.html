@@ -37,6 +37,24 @@ svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
 .alert-box.show{opacity:1}
 .stag{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:rgba(6,14,28,0.92);border:0.5px solid #1e3a5f;border-radius:4px;padding:4px 14px;font-size:11px;color:#4a6fa5;white-space:nowrap;display:none;z-index:4}
 .stag.show{display:block}
+.mobile-legend-stack{display:none}
+@media (max-width: 768px){
+html,body{overflow:auto}
+.wrap{height:auto;min-height:100vh}
+.map-area{flex:none;height:min(56vh,500px)}
+.mobile-legend-stack{display:flex;flex-direction:column;gap:8px;padding:8px}
+.mobile-legend-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 10px;font-size:12px;color:#7EB8E8;background:#0d1f3c;border:0.5px solid #1e3a5f;border-radius:6px;cursor:pointer}
+.mobile-legend-toggle::after{content:'▾';font-size:11px;transition:transform 0.15s}
+.mobile-legend-stack.collapsed .mobile-legend-toggle::after{transform:rotate(-90deg)}
+.mobile-legend-content{display:flex;flex-direction:column;gap:8px}
+.mobile-legend-stack.collapsed .mobile-legend-content{display:none}
+.mobile-legend-stack .spanel,
+.mobile-legend-stack .leg{position:static;inset:auto;min-width:0;width:100%;margin:0}
+.mobile-legend-stack .spanel{padding:8px 10px}
+.mobile-legend-stack .leg{padding:8px 10px;gap:5px}
+.mobile-legend-stack .sr{font-size:12px;gap:12px}
+.mobile-legend-stack .li{font-size:12px}
+}
 @keyframes pulse{0%{r:20;opacity:0.6}50%{r:34;opacity:0.12}100%{r:20;opacity:0.6}}
 @keyframes gpulse{0%{r:18;opacity:0.5}50%{r:28;opacity:0.08}100%{r:18;opacity:0.5}}
 </style>
@@ -221,6 +239,10 @@ svg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1}
   <button class="cb" onclick="resetAll()">↺ Reset</button>
   <span class="hint">drag to reposition · Animate uses current positions</span>
 </div>
+<div class="mobile-legend-stack collapsed" id="mobile-legend-stack">
+  <button class="mobile-legend-toggle" id="mobile-legend-toggle" type="button" aria-expanded="false">Show legends</button>
+  <div class="mobile-legend-content" id="mobile-legend-content"></div>
+</div>
 </div>
 
 <script>
@@ -234,6 +256,14 @@ const svRem=document.getElementById('sv-rem'),svHits=document.getElementById('sv
 const uaOverlay=document.getElementById('ua-overlay'),uaBtn=document.getElementById('ua-btn');
 const ringRem=document.getElementById('ring-rem'),ringLbl=document.getElementById('ring-lbl');
 const tgLine=document.getElementById('tg-line');
+const mapAreaEl=document.querySelector('.map-area');
+const ctrlEl=document.querySelector('.ctrl');
+const mobileLegendStackEl=document.getElementById('mobile-legend-stack');
+const mobileLegendToggleEl=document.getElementById('mobile-legend-toggle');
+const mobileLegendContentEl=document.getElementById('mobile-legend-content');
+const statPanelEl=document.querySelector('.spanel');
+const legendPanelEl=document.querySelector('.leg');
+let mobileLegendCollapsed=true;
 
 const BASE={x:315,y:398};
 const MAX_PX=333,PX_KM=300/MAX_PX,RANGE_FACTOR=0.62;
@@ -547,6 +577,31 @@ function togglePause(){
   btn.style.color=paused?'#7EB8E8':'';
 }
 
+function setMobileLegendCollapsed(collapsed){
+  mobileLegendCollapsed=collapsed;
+  if(!mobileLegendStackEl||!mobileLegendToggleEl)return;
+  mobileLegendStackEl.classList.toggle('collapsed',collapsed);
+  mobileLegendToggleEl.textContent=collapsed?'Show legends':'Hide legends';
+  mobileLegendToggleEl.setAttribute('aria-expanded',collapsed?'false':'true');
+}
+
+function toggleMobileLegend(){
+  setMobileLegendCollapsed(!mobileLegendCollapsed);
+}
+
+function applyMobileLegendLayout(){
+  if(!mapAreaEl||!ctrlEl||!mobileLegendStackEl||!mobileLegendContentEl||!statPanelEl||!legendPanelEl)return;
+  if(window.matchMedia('(max-width: 768px)').matches){
+    if(statPanelEl.parentElement!==mobileLegendContentEl)mobileLegendContentEl.appendChild(statPanelEl);
+    if(legendPanelEl.parentElement!==mobileLegendContentEl)mobileLegendContentEl.appendChild(legendPanelEl);
+    setMobileLegendCollapsed(mobileLegendCollapsed);
+  }else{
+    setMobileLegendCollapsed(true);
+    if(statPanelEl.parentElement!==mapAreaEl)mapAreaEl.appendChild(statPanelEl);
+    if(legendPanelEl.parentElement!==mapAreaEl)mapAreaEl.appendChild(legendPanelEl);
+  }
+}
+
 // ── ANIMATE: starts from CURRENT positions, no reset ─────────────────────────
 function animateAll(){
   if(animating)return;
@@ -624,6 +679,9 @@ function animateAll(){
 initPositions(0);
 startDrift();
 setTimeout(animateAll, 800);
+if(mobileLegendToggleEl)mobileLegendToggleEl.addEventListener('click',toggleMobileLegend);
+applyMobileLegendLayout();
+window.addEventListener('resize',applyMobileLegendLayout);
 </script>
 </body>
 </html>
